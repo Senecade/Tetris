@@ -47,7 +47,7 @@ void move_block(int direct){
 }
 
 int possible(int direct){
-    if(direct != FALL && 0.2 > (clock() - last_move) / CLOCKS_PER_SEC)
+    if(direct != FALL_INT && 0.2 > (clock() - last_move) / CLOCKS_PER_SEC)
         return 0;
     
     last_move = clock();

@@ -32,27 +32,9 @@
 #define ROTATE_RIGHT try_move(ROTATION_RIGHT_INT);
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT);
 
-int field[10][20] = {0}, block_num = 0, level = 0, delay = 1000;
+int field[10][22] /*gezeigt werden nur 20 Blöcke (vertikal)*/ = {0}, block_num = 0, level = 0, delay = 1000;
 clock_t last_move = 0;
 char running = 1, next_block = 0;
-
-void rotate(int direct) {
-    int hx,hy,n = ActiveBlox.Blox.size - 1;
-    
-    for(int i = 0; i < 4; i++){
-        hx = ActiveBlox.Blox.points[i][X];
-        hy = ActiveBlox.Blox.points[i][Y];
-        
-        if (direct == ROTATION_LEFT_INT){
-            ActiveBlox.Blox.points[i][X] = n - hy;
-            ActiveBlox.Blox.points[i][Y] = hx;
-        }
-        else{
-            ActiveBlox.Blox.points[i][X] = hy;
-            ActiveBlox.Blox.points[i][Y] = n - hx;
-        }
-    }
-}
 
 int possible(int direct){
     if(direct != FALL_INT && 0.2 > (clock() - last_move) / CLOCKS_PER_SEC)
@@ -64,12 +46,12 @@ int possible(int direct){
     
     return TRUE;
 }
-
-int try_move(int direct){
-    if(possible(direct) == FALSE)
+//rotate @move.c
+int try_move(int movetype){
+    if(possible(movetype) == FALSE)
         return FALSE;
     
-    switch(direct){
+    switch(movetype){
         case ROTATION_RIGHT_INT: ROTATE_BLOCK_RIGHT break;
         case ROTATION_LEFT_INT:  ROTATE_BLOCK_LEFT break;
         case RIGHT_INT:          MOVE_BLOCK_RIGHT break;

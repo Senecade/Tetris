@@ -21,7 +21,7 @@
 #define MOVE_BLOCK_RIGHT ActiveBlox.x++;
 #define MOVE_BLOCK_DOWN ActiveBlox.y++;
 #define MOVE_BLOCK_LEFT ActiveBlox.x--;
-#define MOVE_BLOCK_FALL ActiveBlox.y++;
+#define MOVE_BLOCK_FALL while (possible(DOWN_INT)) ActiveBlox.y++;
 #define ROTATE_BLOCK_RIGHT rotate(ROTATION_RIGHT_INT);
 #define ROTATE_BLOCK_LEFT rotate(ROTATION_LEFT_INT);
 
@@ -32,20 +32,7 @@
 #define ROTATE_RIGHT try_move(ROTATION_RIGHT_INT);
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT);
 
-int field[10][22] /*gezeigt werden nur 20 Blöcke (vertikal)*/ = {0}, block_num = 0, level = 0, delay = 1000;
-clock_t last_move = 0;
-char running = 1, next_block = 0;
-
-int possible(int direct){
-    if(direct != FALL_INT && 0.2 > (clock() - last_move) / CLOCKS_PER_SEC)
-        return FALSE;
-    
-    last_move = clock();
-    
-    // EINFUEGEN: Pruefung, ob der Block fuer die Aktion Platz hat
-    
-    return TRUE;
-}
+//possible @move.c
 //rotate @move.c
 int try_move(int movetype){
     if(possible(movetype) == FALSE)

@@ -16,7 +16,7 @@ void rotate(int direct) {
 
 int possible(int movetype) {
 	int x,y;
-	if (movetype == DOWN_INT) {
+	if (movetype == FALL_INT) {
 		for(int i=0;i<4;i++) {
 			x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
 			y = ActiveBlox.x + ActiveBlox.Blox.points[i][Y] + 1;
@@ -53,6 +53,6 @@ int possible(int movetype) {
 			if (field[x][y] % 2 == 1) return FALSE;
 		}
 	}
-	// FALL_INT geht immer
+	//DOWN_INT geht immer
 	return TRUE;
 }

@@ -19,9 +19,9 @@
 #define FALSE 0
 
 #define MOVE_BLOCK_RIGHT ActiveBlox.x++;
-#define MOVE_BLOCK_DOWN ActiveBlox.y++;
+#define MOVE_BLOCK_DOWN while (possible(DOWN_INT)) ActiveBlox.y++;
 #define MOVE_BLOCK_LEFT ActiveBlox.x--;
-#define MOVE_BLOCK_FALL while (possible(DOWN_INT)) ActiveBlox.y++;
+#define MOVE_BLOCK_FALL ActiveBlox.y++;
 #define ROTATE_BLOCK_RIGHT rotate(ROTATION_RIGHT_INT);
 #define ROTATE_BLOCK_LEFT rotate(ROTATION_LEFT_INT);
 
@@ -32,6 +32,7 @@
 #define ROTATE_RIGHT try_move(ROTATION_RIGHT_INT);
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT);
 
+int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level = 1,block_num = 0,next_block,delay;
 //possible @move.c
 //rotate @move.c
 int try_move(int movetype){
@@ -72,23 +73,34 @@ void transform_block() {
 		field[x][y] = ActiveBlox.Blox.rgb;
 	} 
 }
-    
+
+void newqueue() {
+	int z,help;
+	for (int i=0;i<7;i++) {
+		queue[i] = i;
+	}
+	for (int i=6;i>=0;i--) {
+		z = shuffle(0,i - 1);
+		help = queue[i];
+		queue[i] = queue[z];
+		queue[z] = help;
+	}
+}
 
 void spawn_block(){ /*bitte mal Tetris-Guidelines durchlesen, Betreff: Spawning bezüglich Feld und bezüglich Random-Generator */
-    block_num++;
-    
+    if (block_num % 7 == 0) newqueue();
+    next_block = queue[block_num % 7];
+
     ActiveBlox.x = 5;
     ActiveBlox.y = 0;
-    
     for(int i = 0; i < 4; i++){
         ActiveBlox.Blox.points[i][X] = Block[next_block].points[i][X];
         ActiveBlox.Blox.points[i][Y] = Block[next_block].points[i][Y];
     }
-    
     ActiveBlox.Blox.rgb = Block[next_block].rgb;
     ActiveBlox.Blox.size = Block[next_block].size;
     
-    next_block = shuffle(0, 6);
+    block_num++;
 }
 
 void next_block(){

@@ -32,6 +32,9 @@
 #define ROTATE_RIGHT try_move(ROTATION_RIGHT_INT);
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT);
 
+#define CHANGE_INT 0
+#define RESULT_INT 1
+
 int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level = 1,block_num = 0,next_block,delay;
 //possible @move.c
 //rotate @move.c
@@ -65,6 +68,17 @@ int shuffle(int start, int stop){
     return (rand() % (stop - start + 1)) + start;
 }
 
+int block_to_rgb(int rgb, int *r, int *g, int *b) {
+	if (rgb % 2 == 0) return FALSE;
+	rgb = rgb >>1;
+	*b = rgb % 256;
+	rgb = rgb >>8;
+	*g = rgb % 256;
+	rgb = rgb >>8;
+	*r = rgb % 256;
+	return TRUE;
+}
+
 void transform_block() {
 	int x,y;
 	for (int i=0;i<4;i++) {
@@ -92,7 +106,9 @@ void spawn_block(){ /*bitte mal Tetris-Guidelines durchlesen, Betreff: Spawning 
     next_block = queue[block_num % 7];
 
     ActiveBlox.x = 5;
-    ActiveBlox.y = 0;
+    ActiveBlox.y = -1;
+    if (possible(FALL_INT)) Active.Blox.y++;
+    else exit();
     for(int i = 0; i < 4; i++){
         ActiveBlox.Blox.points[i][X] = Block[next_block].points[i][X];
         ActiveBlox.Blox.points[i][Y] = Block[next_block].points[i][Y];

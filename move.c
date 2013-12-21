@@ -1,6 +1,6 @@
 void rotate(int direct) {
     	int hx,hy,n = ActiveBlox.Blox.size - 1;
-    	for (int i = 0,i<4,i++) {
+    	for (int i = 0;i<4;i++) {
 		hx = ActiveBlox.Blox.points[i][X];
 		hy = ActiveBlox.Blox.points[i][Y];
 		if (direct == ROTATION_LEFT_INT) {
@@ -55,4 +55,34 @@ int possible(int movetype) {
 	}
 	//DOWN_INT geht immer
 	return TRUE;
+}
+
+void destroy_rows(int output) {
+	int max = -1, ypos = -1, length = 0, full;
+	for (int y = 0; y<22;x++) {
+		full = TRUE;
+		for (int x = 0; x<10;y++) {
+			if (max != -1 && field[x][y] % 2 == 1) max = y;
+			if (field[x][y] % 2 == 0 && full) full = FALSE;
+		}
+		if (full) {
+			length++;
+			if (ypos == -1) ypos = y;
+		}
+	}
+	if (length == 0) return;
+	if (output == CHANGE_INT) {
+		for (int y = ypos; y < ypos + length; y++) {
+			for (int x = 0; x<10;x++) field[x][y] = (((255 <<8) + 255 <<8) + 255 <<1) + 1;
+		} // Felder weiß setzen (als Löschanzeige)
+	}
+	else {
+		for (int y = ypos; y < ypos + length; y++) {
+			for (int x = 0; x<10;x++) field[x][y] = 0;
+		} //Felder löschen
+		for (int y = ypos - 1;y>=max;y--) //Rückwärts durchlaufen um richtig zu kopieren
+			for (int x = 0; x<10; x++) {
+				field[x][y + length] = field[x][y];
+			}
+	}
 }

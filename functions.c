@@ -4,6 +4,7 @@
 #include <time.h>
 
 #define BLOCKS_PER_LEVEL 10
+#define SHOW_CHANGE_TIME 200
 
 #define UP_INT 0
 #define RIGHT_INT 1
@@ -17,6 +18,9 @@
 #define Y 1
 #define TRUE 1
 #define FALSE 0
+
+#define CHANGE_INT 0
+#define RESULT_INT 1
 
 #define MOVE_BLOCK_RIGHT ActiveBlox.x++;
 #define MOVE_BLOCK_DOWN while (possible(DOWN_INT)) ActiveBlox.y++;
@@ -32,8 +36,13 @@
 #define ROTATE_RIGHT try_move(ROTATION_RIGHT_INT);
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT);
 
-#define CHANGE_INT 0
-#define RESULT_INT 1
+#define MARK_ROWS destroy_rows(CHANGE_INT);
+#define DEL_ROWS destroy_rows(RESULT_INT);
+
+#define INIT spawn_block()
+
+#define BLOX_RGB(R, G, B) block_to_rgb(ActiveBlox.Blox.rgb, &(R), &(G), &(B))
+#define FIELD_RGB(X, Y, R, G, B) block_to_rgb(field[(X)][(Y)], &(R), &(G), &(B))
 
 int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level = 1,block_num = 0,next_block,delay;
 //possible @move.c
@@ -41,7 +50,7 @@ int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level
 int try_move(int movetype){
     if(possible(movetype) == FALSE)
         return FALSE;
-    
+        return FALSE;
     switch(movetype){
         case ROTATION_RIGHT_INT: ROTATE_BLOCK_RIGHT break;
         case ROTATION_LEFT_INT:  ROTATE_BLOCK_LEFT break;
@@ -101,14 +110,14 @@ void newqueue() {
 	}
 }
 
-void spawn_block(){ /*bitte mal Tetris-Guidelines durchlesen, Betreff: Spawning bezüglich Feld und bezüglich Random-Generator */
+void spawn_block(){ 
     if (block_num % 7 == 0) newqueue();
     next_block = queue[block_num % 7];
-
-    ActiveBlox.x = 5;
+    if (next_block == 3) ActiveBlox.x = 5;
+    else ActiveBlox.x = 3;
     ActiveBlox.y = -1;
     if (possible(FALL_INT)) Active.Blox.y++;
-    else exit();
+    else /* TODO:Game Over Screen*/ exit();
     for(int i = 0; i < 4; i++){
         ActiveBlox.Blox.points[i][X] = Block[next_block].points[i][X];
         ActiveBlox.Blox.points[i][Y] = Block[next_block].points[i][Y];

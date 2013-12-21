@@ -1,0 +1,24 @@
+das Feld soll von Reihe 2 (Index 1) bis Reihe 22 (Index 21) gerendert werden
+der aktive Block muss seperat gerendert werden
+
+Makros/Funktionen:
+
+Semikolon setzen ist nötig!
+
+	Initialisierungsfunktion:
+		INIT ... Initialisiert das Spieldfeld
+
+	Bewegungsfunktion:
+		RIGHT, DOWN, LEFT, FALL, ROTATE_RIGHT, ROTATE_LEFT
+		... Rückgabewert TRUE/FALSE wenn die Bewegung durchgeführt werden konnte
+		... ROTATE_* sollte keine Reihenlöschung hervorrufen
+
+	Feldoperationen:
+		MARK_ROWS ... färbt die zu löschenden Reihen weiß (Ausgabe erwünscht)
+		DEL_ROWS ... löscht die "markierten" Blöcke
+		... Rückgabewert TRUE/FALSE falls es zu löschende Reihen gibt
+
+	Farboperation:
+		BLOX_RGB(R, G, B) ... setzt R, G & B auf den Farbwert des aktiven Blocks
+		FIELD_RGB(X, Y, R, G, B) ... setzt R, G & B auf den Farbwert des Spielfelds an der Postion (X,Y)
+		... Rückgabewert TRUE/FALSE wenn der Farbwert einen Block repräsentiert (ansonsten R, G & B manuell auf Hintergrundfarbe setzen)

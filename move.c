@@ -57,7 +57,7 @@ int possible(int movetype) {
 	return TRUE;
 }
 
-void destroy_rows(int output) {
+int destroy_rows(int output) {
 	int max = -1, ypos = -1, length = 0, full;
 	for (int y = 0; y<22;x++) {
 		full = TRUE;
@@ -70,7 +70,7 @@ void destroy_rows(int output) {
 			if (ypos == -1) ypos = y;
 		}
 	}
-	if (length == 0) return;
+	if (length == 0) return FALSE;
 	if (output == CHANGE_INT) {
 		for (int y = ypos; y < ypos + length; y++) {
 			for (int x = 0; x<10;x++) field[x][y] = (((255 <<8) + 255 <<8) + 255 <<1) + 1;
@@ -85,4 +85,5 @@ void destroy_rows(int output) {
 				field[x][y + length] = field[x][y];
 			}
 	}
+	return TRUE;
 }

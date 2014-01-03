@@ -16,3 +16,6 @@
 *.exe
 *.out
 *.app
+
+#Netbeans project folder
+nbproject/

@@ -1,2 +1,2 @@
 all:
-	gcc -Wall -o main main.c -lSDL2
+	gcc -Wall -o main main.c -lglut -lGLU -lGL

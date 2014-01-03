@@ -2,8 +2,8 @@
 #include <math.h>
 #include <pthread.h>
 #include <time.h>
-#include <math.h>
 #include "struct.h"
+#include "move.h"
 
 #define BLOCKS_PER_LEVEL 10
 #define SHOW_CHANGE_TIME 200

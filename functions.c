@@ -50,10 +50,11 @@ int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level
 //possible @move.c
 //rotate @move.c
 int try_move(int movetype){
-    if(possible(movetype) == FALSE)
-        return FALSE;
-        return FALSE;
-    switch(movetype){
+    if (possible(movetype) == FALSE) {
+	    if (movetype == FALL_INT) func_next_block;
+	    return FALSE;
+    }
+    switch (movetype) {
         case ROTATION_RIGHT_INT: ROTATE_BLOCK_RIGHT; break;
         case ROTATION_LEFT_INT:  ROTATE_BLOCK_LEFT; break;
         case RIGHT_INT:          MOVE_BLOCK_RIGHT; break;

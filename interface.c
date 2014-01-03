@@ -8,7 +8,7 @@ void drawBlock(int x, int y){
     ox2 = ox1 + 1/5.0;
     oy2 = oy1 - 1/10.0;
     
-    glColor3f(1,1,1);
+    glColor3f(0,0,0);
     glRectf(ox1,oy1,ox2,oy2);
     
     ix1 = ox1 + 2/300.0;

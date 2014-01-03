@@ -1,8 +1,6 @@
 #include "interface.h"
-/*
 #include "functions.h"
 #include "move.h"
-*/
 #include <stdio.h>
 
 

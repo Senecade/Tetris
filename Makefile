@@ -1,2 +1,2 @@
 all:
-	gcc -Wall -o main main.c interface.c -lglut -lGLU -lGL
+	c99 -Wall -o main main.c interface.c move.c functions.c -lglut -lGLU -lGL

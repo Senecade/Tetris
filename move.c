@@ -1,4 +1,6 @@
 #include "struct.h"
+#include "globalshit.h"
+#include "functions.h"
 
 void rotate(int direct) {
     	int hx,hy,n = ActiveBlox.Blox.size - 1;
@@ -61,7 +63,7 @@ int possible(int movetype) {
 
 int destroy_rows(int output) {
 	int max = -1, ypos = -1, length = 0, full;
-	for (int y = 0; y<22;x++) {
+	for (int y = 0; y<22;y++) {
 		full = TRUE;
 		for (int x = 0; x<10;y++) {
 			if (max != -1 && field[x][y] % 2 == 1) max = y;

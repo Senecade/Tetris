@@ -118,8 +118,8 @@ void spawn_block(){
     if (next_block == 3) ActiveBlox.x = 5;
     else ActiveBlox.x = 3;
     ActiveBlox.y = -1;
-    if (possible(FALL_INT)) Active.Blox.y++;
-    else /* TODO:Game Over Screen*/ exit();
+    if (possible(FALL_INT)) ActiveBlox.y++;
+    else /* TODO:Game Over Screen*/ exit(0);
     for(int i = 0; i < 4; i++){
         ActiveBlox.Blox.points[i][X] = Block[next_block].points[i][X];
         ActiveBlox.Blox.points[i][Y] = Block[next_block].points[i][Y];
@@ -130,7 +130,7 @@ void spawn_block(){
     block_num++;
 }
 
-void next_block(){
+void func_next_block(){
     transform_block();
     
     if(!(block_num % BLOCKS_PER_LEVEL))
@@ -139,6 +139,7 @@ void next_block(){
     spawn_block();
 }
 
+/*
 void *background(){
     
     while(running){
@@ -148,3 +149,4 @@ void *background(){
     
     return NULL;
 }
+*/

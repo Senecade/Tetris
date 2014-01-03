@@ -1,4 +1,7 @@
 #include <GL/glut.h>
+#include "functions.h"
+#include <stdio.h>
+
 enum{
     WINDOW_HEIGHT = 600,
     WINDOW_WIDTH = 300
@@ -26,12 +29,18 @@ void drawBlock(int x, int y){
 void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
-    drawBlock(5,0);
-    drawBlock(5,1);
-    drawBlock(5,2);
-    drawBlock(6,1);
+    printf("\n");
+    printf("\n");
+    for(int y = 0; y<22;y++){
+        for(int x = 0;x<10;x++){
+            printf("%i",field[x][y]);
+        }
+        printf("\n");
+    }
     glFlush();  // Render now
 
+}
+void keyboard(unsigned char key, int x, int y){
 }
 void initWindow(int argc, char** argv){
     glutInit(&argc, argv);
@@ -39,5 +48,6 @@ void initWindow(int argc, char** argv){
     glutInitWindowPosition(600,200);
     glutCreateWindow("Tetris");
     glutDisplayFunc(updateWindow);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
 }

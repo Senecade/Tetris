@@ -87,6 +87,7 @@ int destroy_rows(int output) {
 		for (int y = ypos - 1;y>=max;y--) //Rückwärts durchlaufen um richtig zu kopieren
 			for (int x = 0; x<10; x++) {
 				field[x][y + length] = field[x][y];
+				field[x][y] = 0;
 			}
 	}
 	return TRUE;

@@ -57,7 +57,7 @@ void keyboard(int key, int x, int y){
             LEFT;
             break;
         case 's':
-            FALL;
+            DOWN;
             break;
         case 'd':
             RIGHT;
@@ -67,6 +67,9 @@ void keyboard(int key, int x, int y){
 }
 void arrowInput(int key, int x, int y){
     switch(key){	
+        case GLUT_KEY_UP:
+            ROTATE_RIGHT;
+            break;
         case GLUT_KEY_DOWN:
             FALL;
             break;

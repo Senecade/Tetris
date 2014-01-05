@@ -31,7 +31,7 @@ void drawBlock(int x, int y){
 void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
-    //printf("%i | %i\n",ActiveBlox.x,ActiveBlox.y);
+    printf("%i | %i\n",ActiveBlox.x,ActiveBlox.y);
     for(int y = 0; y<22;y++){
         for(int x = 0;x<10;x++){
             
@@ -57,7 +57,7 @@ void arrowInput(int key, int x, int y){
             ROTATE_LEFT;
             break;	
         case GLUT_KEY_DOWN:
-            //DOWN;
+            FALL;
             break;
         case GLUT_KEY_LEFT:
             LEFT;

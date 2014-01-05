@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
-#include <time.h>
+#include <unistd.h>
 #include "struct.h"
 #include "move.h"
 #include "globalshit.h"
+#include "interface.h"
+
 int running = TRUE;
 int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level = 1,block_num = 0,next_block,delay;
 //possible @move.c
@@ -100,12 +103,16 @@ void func_next_block(){
     spawn_block();
 }
 
-void init(){
+int init(){
     spawn_block();
+/*
     while(running){
-        delay(SHOW_CHANGE_TIME);
+        sleep(200);
+        printf("fall");
         FALL;
+        updateWindow();
     }
+*/
     
     return NULL;
 }

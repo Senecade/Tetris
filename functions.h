@@ -9,4 +9,4 @@ void transform_block();
 void newqueue();
 void spawn_block();
 void func_next_block();
-void *background();
+void init();

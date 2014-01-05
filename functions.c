@@ -15,12 +15,6 @@ int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level
 int try_move(int movetype){
     if (possible(movetype) == FALSE) {
 	    if (movetype == FALL_INT) {
-		    if (MARK_ROWS == TRUE) {
-			    updateWindow();
-			    sleep(200);
-			    DEL_ROWS;
-			    updateWindow();
-		    }
 		    func_next_block();
 	    }
 	    return FALSE;
@@ -100,6 +94,12 @@ void spawn_block(){
     ActiveBlox.Blox.size = Block[next_block].size;
     
     block_num++;
+	if (MARK_ROWS == TRUE) {
+		updateWindow();
+		usleep(500000);
+		DEL_ROWS;
+		updateWindow();
+	}
 }
 
 void func_next_block(){

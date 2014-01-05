@@ -65,8 +65,8 @@ int destroy_rows(int output) {
 	int max = -1, ypos = -1, length = 0, full;
 	for (int y = 0; y<22;y++) {
 		full = TRUE;
-		for (int x = 0; x<10;y++) {
-			if (max != -1 && field[x][y] % 2 == 1) max = y;
+		for (int x = 0; x<10;x++) {
+			if (max == -1 && field[x][y] % 2 == 1) max = y;
 			if (field[x][y] % 2 == 0 && full) full = FALSE;
 		}
 		if (full) {

@@ -113,7 +113,6 @@ int init(){
     spawn_block();
     while(running){
         usleep(1000000);
-        printf("fall");
         FALL;
     }
     

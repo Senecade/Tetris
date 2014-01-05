@@ -5,7 +5,7 @@
 #include "struct.h"
 #include "move.h"
 #include "globalshit.h"
-
+int running = TRUE;
 int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level = 1,block_num = 0,next_block,delay;
 //possible @move.c
 //rotate @move.c
@@ -100,14 +100,12 @@ void func_next_block(){
     spawn_block();
 }
 
-/*
-void *background(){
-    
+void init(){
+    spawn_block();
     while(running){
-        sleep(delay);
-        FALL
+        delay(SHOW_CHANGE_TIME);
+        FALL;
     }
     
     return NULL;
 }
-*/

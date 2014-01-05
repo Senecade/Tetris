@@ -34,7 +34,7 @@
 #define MARK_ROWS destroy_rows(CHANGE_INT)
 #define DEL_ROWS destroy_rows(RESULT_INT)
 
-#define INIT spawn_block()
+#define INIT init()
 
 #define BLOX_RGB(R, G, B) block_to_rgb(ActiveBlox.Blox.rgb, &(R), &(G), &(B))
 #define FIELD_RGB(X, Y, R, G, B) block_to_rgb(field[(X)][(Y)], &(R), &(G), &(B))

@@ -14,7 +14,15 @@ int field[10][22] /* angezeigt werden nur 20 Blöcke (horizontal) */ = {0},level
 //rotate @move.c
 int try_move(int movetype){
     if (possible(movetype) == FALSE) {
-	    if (movetype == FALL_INT) func_next_block();
+	    if (movetype == FALL_INT) {
+		    if (MARK_ROWS == TRUE) {
+			    updateWindow();
+			    sleep(200);
+			    DEL_ROWS;
+			    updateWindow();
+		    }
+		    func_next_block();
+	    }
 	    return FALSE;
     }
     switch (movetype) {

@@ -8,6 +8,5 @@
 
 int main(int argc, char** argv) {
     initWindow(argc,argv);
-    INIT;
     return 0;
 }

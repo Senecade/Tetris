@@ -113,14 +113,11 @@ void func_next_block(){
 
 int init(){
     spawn_block();
-/*
     while(running){
-        sleep(200);
+        usleep(1000000);
         printf("fall");
         FALL;
-        updateWindow();
     }
-*/
     
     return NULL;
 }

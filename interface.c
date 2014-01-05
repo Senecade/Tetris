@@ -19,6 +19,7 @@ void drawBlock(int x, int y, int R, int G, int B){
     glColor3f(0,0,0);
     glRectf(ox1,oy1,ox2,oy2);
     
+    //Inner Block
     ix1 = ox1 + 2.0/WINDOW_WIDTH;
     iy1 = oy1 - 2.0/WINDOW_HEIGHT;
     ix2 = ox2 - 2.0/WINDOW_WIDTH;
@@ -45,7 +46,12 @@ void updateWindow(){
     glFlush();  // Render now
 
 }
-void keyboard(int key, int x, int y){
+void display(){
+    printf("execute display()\n");
+    updateWindow();
+}
+void *keyboard(int key, int x, int y){
+    printf("execute keyboard()\n");
     switch(key){
         case 'q':
             ROTATE_LEFT;
@@ -87,9 +93,12 @@ void initWindow(int argc, char** argv){
     glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
     glutInitWindowPosition(600,200);
     glutCreateWindow("Tetris");
-    INIT;
-    glutDisplayFunc(updateWindow);
-    glutKeyboardFunc(keyboard);
+    printf("before display decl \n");
+    glutDisplayFunc(display);
+    printf("before keyboard decl \n");
+    glutKeyboardFunc(&keyboard);
+    printf("before special decl \n");
     glutSpecialFunc(arrowInput);
+    printf("before mainloop \n");
     glutMainLoop();
 }

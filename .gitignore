@@ -17,5 +17,5 @@
 *.out
 *.app
 
-#netbeans project files
+#Netbeans project folder
 nbproject/

@@ -23,38 +23,38 @@ int possible(int movetype) {
 	if (movetype == FALL_INT) {
 		for(int i=0;i<4;i++) {
 			x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
-			y = ActiveBlox.x + ActiveBlox.Blox.points[i][Y] + 1;
-			if (y>21 || field[x][y] % 2 == 1) return FALSE;
+			y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y] + 1;
+			if (y<0 || y>21 || x<0 || x>9 || field[x][y] % 2 == 1) return FALSE;
 		}
 	}
 	else if (movetype == RIGHT_INT) {
 		for(int i=0;i<4;i++) {
 			x = ActiveBlox.x + ActiveBlox.Blox.points[i][X] + 1;
-			y = ActiveBlox.x + ActiveBlox.Blox.points[i][Y];
-			if (x>19 || field[x][y] % 2 == 1) return FALSE;
+			y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y];
+			if (y<0 || y>21 || x<0 || x>9 || field[x][y] % 2 == 1) return FALSE;
 		}
 	}
 	else if (movetype == LEFT_INT) {
 		for(int i=0;i<4;i++) {
 			x = ActiveBlox.x + ActiveBlox.Blox.points[i][X] - 1;
-			y = ActiveBlox.x + ActiveBlox.Blox.points[i][Y];
-			if (x<0 || field[x][y] % 2 == 1) return FALSE;
+			y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y];
+			if (y<0 || y>21 || x<0 || x>9 || field[x][y] % 2 == 1) return FALSE;
 		}
 	}
 	else if (movetype == ROTATION_RIGHT_INT) {
 		int n = ActiveBlox.Blox.size - 1;
 		for(int i=0;i<4;i++) {
 			x = ActiveBlox.x + ActiveBlox.Blox.points[i][Y];
-			y = ActiveBlox.x + n - ActiveBlox.Blox.points[i][X];
-			if (field[x][y] % 2 == 1) return FALSE;
+			y = ActiveBlox.y + n - ActiveBlox.Blox.points[i][X];
+			if (y<0 || y>21 || x<0 || x>9 || field[x][y] % 2 == 1) return FALSE;
 		}
 	}
 	else if (movetype == ROTATION_LEFT_INT) {
 		int n = ActiveBlox.Blox.size - 1;
 		for(int i=0;i<4;i++) {
 			x = ActiveBlox.x + n - ActiveBlox.Blox.points[i][Y];
-			y = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
-			if (field[x][y] % 2 == 1) return FALSE;
+			y = ActiveBlox.y + ActiveBlox.Blox.points[i][X];
+			if (y<0 || y>21 || x<0 || x>9 || field[x][y] % 2 == 1) return FALSE;
 		}
 	}
 	//DOWN_INT geht immer

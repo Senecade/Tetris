@@ -58,7 +58,7 @@ void transform_block() {
 	int x,y;
 	for (int i=0;i<4;i++) {
 		x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
-		y = ActiveBlox.x + ActiveBlox.Blox.points[i][Y];
+		y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y];
 		field[x][y] = ActiveBlox.Blox.rgb;
 	} 
 }

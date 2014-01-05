@@ -47,11 +47,9 @@ void updateWindow(){
 
 }
 void display(){
-    printf("execute display()\n");
     updateWindow();
 }
 void *keyboard(int key, int x, int y){
-    printf("execute keyboard()\n");
     switch(key){
         case 'q':
             ROTATE_LEFT;
@@ -77,7 +75,7 @@ void arrowInput(int key, int x, int y){
             ROTATE_RIGHT;
             break;
         case GLUT_KEY_DOWN:
-            FALL;
+            DOWN;
             break;
         case GLUT_KEY_LEFT:
             LEFT;
@@ -88,17 +86,20 @@ void arrowInput(int key, int x, int y){
     }
     updateWindow();
 }
+
+void glutTimer()
+{
+    glutPostRedisplay();
+    glutTimerFunc(1, glutTimer, NULL);
+}
 void initWindow(int argc, char** argv){
     glutInit(&argc, argv);
     glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
     glutInitWindowPosition(600,200);
     glutCreateWindow("Tetris");
-    printf("before display decl \n");
     glutDisplayFunc(display);
-    printf("before keyboard decl \n");
     glutKeyboardFunc(&keyboard);
-    printf("before special decl \n");
     glutSpecialFunc(arrowInput);
-    printf("before mainloop \n");
+    glutTimerFunc(1,glutTimer , NULL);
     glutMainLoop();
 }

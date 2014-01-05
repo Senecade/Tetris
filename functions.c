@@ -95,10 +95,8 @@ void spawn_block(){
     
     block_num++;
 	if (MARK_ROWS == TRUE) {
-		updateWindow();
 		usleep(500000);
 		DEL_ROWS;
-		updateWindow();
 	}
 }
 

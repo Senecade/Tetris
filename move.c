@@ -91,7 +91,7 @@ int destroy_rows(int output) {
 			}
 	}
 	del_blocks += length;
-	level = del_blocks / 10;
+	level = del_blocks / 8 + 1;
 	next_level();
 	return TRUE;
 }

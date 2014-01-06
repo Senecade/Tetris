@@ -1,5 +1,4 @@
-#define BLOCKS_PER_LEVEL 10
-#define SHOW_CHANGE_TIME 200
+#define BLOCKS_PER_LEVEL 8
 
 #define UP_INT 0
 #define RIGHT_INT 1
@@ -31,8 +30,7 @@
 #define ROTATE_RIGHT try_move(ROTATION_RIGHT_INT)
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT)
 
-#define MARK_ROWS destroy_rows(CHANGE_INT)
-#define DEL_ROWS destroy_rows(RESULT_INT)
+#define DEL_ROWS destroy_rows()
 
 #define INIT init()
 

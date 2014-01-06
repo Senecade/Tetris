@@ -61,53 +61,37 @@ int possible(int movetype) {
 	return TRUE;
 }
 
-int destroy_rows(int output) {
-	int max = -1, ypos = -1, length = 0, full = TRUE, found = FALSE;
-	for (int y = 0; y<22;y++) {
-		if (found) break;
-		for (int x = 0; x<10;x++) {
-			if (max == -1 && field[x][y] % 2 == 1) {
-				max = y;
-				found = TRUE;
-				break;
-			}
-		}
-	}
-	found = FALSE;
-	for (int y = max;y<22;y++) {
-		if (found && !full) break;
+void destroy_rows() {
+	int full,ypos;
+	for (int y = 0; y < 22; y++) {
 		full = TRUE;
-		for (int x = 0;x<10;x++) {
-			if (field[x][y] % 2 == 1 && full) {
+		for (int x = 0; x < 10; x++) {
+			if (field[x][y] % 2 == 0) {
 				full = FALSE;
 				break;
 			}
 		}
 		if (full) {
-			found = TRUE;
-			length++;
-			if (ypos == -1) ypos = y;
-		}
-	}
-	if (length == 0) return FALSE;
-	if (output == CHANGE_INT) {
-		for (int y = ypos; y < ypos + length; y++) {
-			for (int x = 0; x<10;x++) field[x][y] = (((255 <<8) + 255 <<8) + 255 <<1) + 1;
-		} // Felder weiß setzen (als Löschanzeige)
-	}
-	else {
-		for (int y = ypos; y < ypos + length; y++) {
-			for (int x = 0; x<10;x++) field[x][y] = 0;
-		} //Felder löschen
-		for (int y = ypos - 1;y>=max;y--) { //Rückwärts durchlaufen um richtig zu kopieren
-			for (int x = 0; x<10; x++) {
-				field[x][y + length] = field[x][y];
-				field[x][y] = 0;
+			del_blocks++;
+			for (int v = 0; v < 10; v++) field[v][y] = 0;
+			for (int w = y; w >= 0; w--) {
+				for (int v = 0; v < 10; v++) {
+					if (w == 0) {
+						field[v][w] = 0;
+					}
+					else {
+						field[v][w] = field[v][w - 1];
+						field[v][w - 1] = 0;
+					}
+				}
+
 			}
 		}
 	}
-	del_blocks += length;
-	level = del_blocks / BLOCKS_PER_LEVEL + 1;
-	next_level();
-	return TRUE;
+	ypos = del_blocks / BLOCKS_PER_LEVEL; //Recycling
+	if (ypos > level) {
+		level = ypos;
+		next_level();
+	}
+	return;
 }

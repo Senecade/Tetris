@@ -90,5 +90,8 @@ int destroy_rows(int output) {
 				field[x][y] = 0;
 			}
 	}
+	del_blocks += length;
+	level = del_blocks / 10;
+	next_level();
 	return TRUE;
 }

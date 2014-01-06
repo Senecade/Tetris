@@ -3,6 +3,7 @@
 #include "struct.h"
 #include "globalshit.h"
 #include <stdio.h>
+#include <SDL/SDL.h>
 
 enum{
     WINDOW_HEIGHT = 600,
@@ -19,6 +20,7 @@ void drawBlock(int x, int y, int R, int G, int B){
     glColor3f(0,0,0);
     glRectf(ox1,oy1,ox2,oy2);
     
+    //Inner Block
     ix1 = ox1 + 2.0/WINDOW_WIDTH;
     iy1 = oy1 - 2.0/WINDOW_HEIGHT;
     ix2 = ox2 - 2.0/WINDOW_WIDTH;
@@ -31,7 +33,7 @@ void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
 
-    printf("%i | %i\n",ActiveBlox.x,ActiveBlox.y);
+    //printf("%i | %i\n",ActiveBlox.x,ActiveBlox.y);
     int R,G,B;
     for(int y = 0; y<22;y++){
         for(int x = 0;x<10;x++){
@@ -45,7 +47,10 @@ void updateWindow(){
     glFlush();  // Render now
 
 }
-void keyboard(int key, int x, int y){
+void display(){
+    updateWindow();
+}
+void *keyboard(int key, int x, int y){
     switch(key){
         case 'q':
             ROTATE_LEFT;
@@ -57,6 +62,9 @@ void keyboard(int key, int x, int y){
             LEFT;
             break;
         case 's':
+            FALL;
+            break;
+        case 'w':
             DOWN;
             break;
         case 'd':
@@ -71,7 +79,7 @@ void arrowInput(int key, int x, int y){
             ROTATE_RIGHT;
             break;
         case GLUT_KEY_DOWN:
-            FALL;
+            DOWN;
             break;
         case GLUT_KEY_LEFT:
             LEFT;
@@ -82,14 +90,23 @@ void arrowInput(int key, int x, int y){
     }
     updateWindow();
 }
+
+void glutTimer()
+{
+    glutPostRedisplay();
+    glutTimerFunc(1, glutTimer, NULL);
+}
 void initWindow(int argc, char** argv){
     glutInit(&argc, argv);
     glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
     glutInitWindowPosition(600,200);
     glutCreateWindow("Tetris");
-    INIT;
-    glutDisplayFunc(updateWindow);
-    glutKeyboardFunc(keyboard);
+    glutDisplayFunc(display);
+    glutKeyboardFunc(&keyboard);
     glutSpecialFunc(arrowInput);
+    glutTimerFunc(1,glutTimer , NULL);
     glutMainLoop();
+}
+void initWindowSDL(){
+    
 }

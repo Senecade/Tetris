@@ -9,6 +9,7 @@ enum{
     WINDOW_HEIGHT = 600,
     WINDOW_WIDTH = 300
 };
+SDL_Surface* screen;
 void drawBlock(int x, int y, int R, int G, int B){
     float ox1,oy1,ox2,oy2,ix1,iy1,ix2,iy2;
     //Outline
@@ -108,5 +109,27 @@ void initWindow(int argc, char** argv){
     glutMainLoop();
 }
 void initWindowSDL(){
+    SDL_Init(SDL_INIT_VIDEO);
+    screen = SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
     
+    if(!screen){
+        SDL_Quit();
+        return;
+    }
+    
+    int running = 1;
+    while(running){
+        SDL_Event event;
+        while(SDL_PollEvent(&event)){
+            switch(event.type){
+                case SDL_QUIT:
+                    running = 0;
+                    break;
+            }
+        }
+        SDL_Flip(screen);
+        SDL_Delay(10);
+    }
+    
+    SDL_Quit();
 }

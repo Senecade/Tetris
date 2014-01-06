@@ -6,6 +6,7 @@
 #include <pthread.h>
 
 #define SDL 0
+
 int main(int argc, char** argv) {
     pthread_t functions,interface;
     int error;
@@ -14,10 +15,7 @@ int main(int argc, char** argv) {
         printf("Error: %d",error);
     }
     if(SDL){
-        error = pthread_create(&interface,NULL,initWindowSDL,NULL);
-        if(error){
-            printf("Error: %d",error);
-        }
+        initWindowSDL();
     }
     else initWindow(argc,argv);
     return 0;

@@ -8,8 +8,8 @@
 #include "globalshit.h"
 #include "interface.h"
 
-int field[10][22]  = {0}, level = 1, block_num = 0, next_block, delay, del_blocks = 0, running = TRUE;
-
+int field[10][22]  = {0}, level = 1, block_num = 0, next_block, del_blocks = 0, running = TRUE;
+double delay;
 int try_move(int movetype){
 	if (possible(movetype) == FALSE) {
 		if (movetype == FALL_INT) {
@@ -29,7 +29,7 @@ int try_move(int movetype){
 }
 
 void next_level(){
-    	double a = 1000000, b = 300000, k = 5 * pow(10,-8), e = 2.71828182846;
+    	double b = 1000000, a = 300000, k = 5 * pow(10,-8), e = 2.71828182846;
 	delay = a / (1 + (pow(e,(-k * a * (level - 1)))) * ((a / b) - 1));
 }
 
@@ -101,7 +101,7 @@ int init() {
     spawn_block();
     next_level();
     while (running) {
-        usleep(delay);
+        usleep((int) delay);
         FALL;
     }
     return NULL;

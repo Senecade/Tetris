@@ -1,6 +1,7 @@
 //possible @move.h
 //rotate @move.h
-int field[10][22];
+int field[10][22],level,del_blocks;
+double delay;
 int try_move(int movetype);
 void next_level();
 int shuffle(int start, int stop);

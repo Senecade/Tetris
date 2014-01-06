@@ -3,6 +3,7 @@
 #include "struct.h"
 #include "globalshit.h"
 #include <stdio.h>
+#include <SDL/SDL.h>
 
 enum{
     WINDOW_HEIGHT = 600,
@@ -61,6 +62,9 @@ void *keyboard(int key, int x, int y){
             LEFT;
             break;
         case 's':
+            FALL;
+            break;
+        case 'w':
             DOWN;
             break;
         case 'd':
@@ -102,4 +106,7 @@ void initWindow(int argc, char** argv){
     glutSpecialFunc(arrowInput);
     glutTimerFunc(1,glutTimer , NULL);
     glutMainLoop();
+}
+void initWindowSDL(){
+    
 }

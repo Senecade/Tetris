@@ -5,13 +5,20 @@
 #include "globalshit.h"
 #include <pthread.h>
 
+#define SDL 0
 int main(int argc, char** argv) {
-    pthread_t functions;
+    pthread_t functions,interface;
     int error;
     error = pthread_create(&functions,NULL,init,NULL);
     if(error){
         printf("Error: %d",error);
     }
-    initWindow(argc,argv);
+    if(SDL){
+        error = pthread_create(&interface,NULL,initWindowSDL,NULL);
+        if(error){
+            printf("Error: %d",error);
+        }
+    }
+    else initWindow(argc,argv);
     return 0;
 }

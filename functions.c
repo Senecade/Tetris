@@ -7,8 +7,9 @@
 #include "move.h"
 #include "globalshit.h"
 #include "interface.h"
+#include "functions.h"
 
-int field[10][22]  = {0}, level = 1, block_num = 0, next_block, delay, del_blocks = 0, running = TRUE;
+int field[10][22] = { 0 }, level = 1, block_num = 0, del_blocks = 0, running = TRUE;
 
 int try_move(int movetype){
 	if (possible(movetype) == FALSE) {
@@ -93,7 +94,6 @@ void spawn_block() {
 
 void func_next_block() {
 	transform_block();
-	if(!(block_num % BLOCKS_PER_LEVEL)) next_level();
 	spawn_block();
 }
 
@@ -101,7 +101,7 @@ int init() {
     spawn_block();
     next_level();
     while (running) {
-        usleep(delay);
+        usleep((unsigned int) delay);
         FALL;
     }
     return NULL;

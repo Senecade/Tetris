@@ -62,14 +62,29 @@ int possible(int movetype) {
 }
 
 int destroy_rows(int output) {
-	int max = -1, ypos = -1, length = 0, full;
+	int max = -1, ypos = -1, length = 0, full = TRUE, found = FALSE;
 	for (int y = 0; y<22;y++) {
-		full = TRUE;
+		if (found) break;
 		for (int x = 0; x<10;x++) {
-			if (max == -1 && field[x][y] % 2 == 1) max = y;
-			if (field[x][y] % 2 == 0 && full) full = FALSE;
+			if (max == -1 && field[x][y] % 2 == 1) {
+				max = y;
+				found = TRUE;
+				break;
+			}
+		}
+	}
+	found = FALSE;
+	for (int y = max;y<22;y++) {
+		if (found && !full) break;
+		full = TRUE;
+		for (int x = 0;x<10;x++) {
+			if (field[x][y] % 2 == 1 && full) {
+				full = FALSE;
+				break;
+			}
 		}
 		if (full) {
+			found = TRUE;
 			length++;
 			if (ypos == -1) ypos = y;
 		}
@@ -84,14 +99,15 @@ int destroy_rows(int output) {
 		for (int y = ypos; y < ypos + length; y++) {
 			for (int x = 0; x<10;x++) field[x][y] = 0;
 		} //Felder löschen
-		for (int y = ypos - 1;y>=max;y--) //Rückwärts durchlaufen um richtig zu kopieren
+		for (int y = ypos - 1;y>=max;y--) { //Rückwärts durchlaufen um richtig zu kopieren
 			for (int x = 0; x<10; x++) {
 				field[x][y + length] = field[x][y];
 				field[x][y] = 0;
 			}
+		}
 	}
 	del_blocks += length;
-	level = del_blocks / 10;
+	level = del_blocks / BLOCKS_PER_LEVEL + 1;
 	next_level();
 	return TRUE;
 }

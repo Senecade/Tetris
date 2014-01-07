@@ -65,13 +65,13 @@ void transform_block() {
 void newqueue() {
 	int z,help;
 	for (int i=0;i<7;i++) {
-		queue[i] = i;
+		queue[i] = queue[i + 7];
 	}
 	for (int i=6;i>=0;i--) {
 		z = shuffle(0,i - 1);
-		help = queue[i];
-		queue[i] = queue[z];
-		queue[z] = help;
+		help = queue[i + 7];
+		queue[i + 7] = queue[z + 7];
+		queue[z + 7] = help;
 	}
 }
 
@@ -99,13 +99,23 @@ void func_next_block() {
 }
 
 int init() {
-    spawn_block();
-    next_level();
-    while (running) {
-        usleep((unsigned int) delay);
-        FALL;
-    }
-    return 0;
+	int z,help;
+	for (int i=0;i<7;i++) {
+		queue[i + 7] = i;
+	}
+	for (int i=6;i>=0;i--) {
+		z = shuffle(0,i - 1);
+		help = queue[i + 7];
+		queue[i + 7] = queue[z + 7];
+		queue[z + 7] = help;
+	}
+	spawn_block();
+	next_level();
+	while (running) {
+	usleep((unsigned int) delay);
+		FALL;
+	}
+	return 0;
 }
 
 

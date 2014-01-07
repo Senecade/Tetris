@@ -23,7 +23,7 @@ int try_move(int movetype){
 		case ROTATION_RIGHT_INT: ROTATE_BLOCK_RIGHT; SHADOW; break;
 		case ROTATION_LEFT_INT:  ROTATE_BLOCK_LEFT; SHADOW; break;
 		case RIGHT_INT:          MOVE_BLOCK_RIGHT; SHADOW; break;
-		case DOWN_INT:           MOVE_BLOCK_DOWN; break;
+		case DOWN_INT:           MOVE_BLOCK_DOWN; SHADOW; break;
 		case LEFT_INT:           MOVE_BLOCK_LEFT; SHADOW; break;
 		case FALL_INT:           MOVE_BLOCK_FALL; SHADOW; break;
 		case SHADOW_FALL_INT:    MOVE_SHADOW_FALL; break;
@@ -32,7 +32,9 @@ int try_move(int movetype){
 }
 
 void next_level(){
-    	double b = 1000000, a = 300000, k = pow(10,-7), e = 2.71828182846;
+    	double b = 1000, a = 300 /*in ms*/, k = pow(10,-7), e = 2.71828182846;
+	a *= 1000;
+	b *= 1000;
 	delay = a / (1 + (pow(e,(-k * a * level))) * ((a / b) - 1));
 }
 
@@ -90,11 +92,11 @@ void spawn_block() {
 	ActiveBlox.Blox.rgb = Block[next_block].rgb;
 	ActiveBlox.Blox.size = Block[next_block].size;
 	block_num++;
-	destroy_rows();
 }
 
 void func_next_block() {
-	transform_block();
+	transform_block();	
+	destroy_rows();
 	spawn_block();
 }
 
@@ -112,7 +114,7 @@ int init() {
 	spawn_block();
 	next_level();
 	while (running) {
-	usleep((unsigned int) delay);
+		usleep((unsigned int) delay);
 		FALL;
 	}
 	return 0;

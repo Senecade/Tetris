@@ -43,6 +43,8 @@ void updateWindow(){
     BLOX_RGB(R,G,B);
     for(int i = 0; i<4;i++){
 	if(ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x+ActiveBlox.Blox.points[i][X],ActiveBlox.y+ActiveBlox.Blox.points[i][Y]+ActiveBlox.shadow_offset,130,130,130);
+    }
+    for(int i = 0; i<4;i++){
         drawBlock(ActiveBlox.x+ActiveBlox.Blox.points[i][X],ActiveBlox.y+ActiveBlox.Blox.points[i][Y],R,G,B);
     }
     glFlush();  // Render now

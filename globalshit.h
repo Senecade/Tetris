@@ -30,9 +30,8 @@
 #define ROTATE_RIGHT try_move(ROTATION_RIGHT_INT)
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT)
 
-#define DEL_ROWS destroy_rows()
-
 #define INIT init()
 
 #define BLOX_RGB(R, G, B) block_to_rgb(ActiveBlox.Blox.rgb, &(R), &(G), &(B))
 #define FIELD_RGB(X, Y, R, G, B) block_to_rgb(field[(X)][(Y)], &(R), &(G), &(B))
+#define RGB_INT(R, G, B) (((((((R) <<8) + (G)) <<8) + (B))<<1) + 1)

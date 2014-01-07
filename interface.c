@@ -68,6 +68,7 @@ void *keyboard(int key, int x, int y){
             break;
     }
     updateWindow();
+    return;
 }
 void arrowInput(int key, int x, int y){
     switch(key){	

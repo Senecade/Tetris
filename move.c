@@ -73,7 +73,7 @@ void destroy_rows() {
 		}
 		if (full) {
 			del_blocks++;
-			for (int v = 0; v < 10; v++) field[v][y] = 0;
+			//for (int v = 0; v < 10; v++) field[v][y] = 0;
 			for (int w = y; w >= 0; w--) {
 				for (int v = 0; v < 10; v++) {
 					if (w == 0) {

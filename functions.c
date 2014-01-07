@@ -1,3 +1,4 @@
+#define _BSD_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -9,7 +10,7 @@
 #include "interface.h"
 #include "functions.h"
 
-int field[10][22] = { 0 }, level = 0, block_num = 0, del_blocks = 0, running = TRUE;
+int field[10][22] = {{0}}, level = 0, block_num = 0, del_blocks = 0, running = TRUE;
 
 int try_move(int movetype){
 	if (possible(movetype) == FALSE) {
@@ -74,7 +75,6 @@ void newqueue() {
 }
 
 void spawn_block() { 
-	int check = TRUE;
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
 	if (next_block == 3) ActiveBlox.x = 5;
@@ -89,7 +89,7 @@ void spawn_block() {
 	ActiveBlox.Blox.rgb = Block[next_block].rgb;
 	ActiveBlox.Blox.size = Block[next_block].size;
 	block_num++;
-	DEL_ROWS;
+	destroy_rows();
 }
 
 void func_next_block() {

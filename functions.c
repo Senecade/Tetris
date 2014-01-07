@@ -1,3 +1,4 @@
+#define _BSD_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -7,9 +8,10 @@
 #include "move.h"
 #include "globalshit.h"
 #include "interface.h"
+#include "functions.h"
 
-int field[10][22]  = {0}, level = 1, block_num = 0, next_block, del_blocks = 0, running = TRUE;
-double delay;
+int field[10][22] = {{0}}, level = 0, block_num = 0, del_blocks = 0, running = TRUE;
+
 int try_move(int movetype){
 	if (possible(movetype) == FALSE) {
 		if (movetype == FALL_INT) {
@@ -18,19 +20,20 @@ int try_move(int movetype){
 		return FALSE;
 	}
 	switch (movetype) {
-		case ROTATION_RIGHT_INT: ROTATE_BLOCK_RIGHT; break;
-		case ROTATION_LEFT_INT:  ROTATE_BLOCK_LEFT; break;
-		case RIGHT_INT:          MOVE_BLOCK_RIGHT; break;
+		case ROTATION_RIGHT_INT: ROTATE_BLOCK_RIGHT; SHADOW; break;
+		case ROTATION_LEFT_INT:  ROTATE_BLOCK_LEFT; SHADOW; break;
+		case RIGHT_INT:          MOVE_BLOCK_RIGHT; SHADOW; break;
 		case DOWN_INT:           MOVE_BLOCK_DOWN; break;
-		case LEFT_INT:           MOVE_BLOCK_LEFT; break;
-		case FALL_INT:           MOVE_BLOCK_FALL; break;
+		case LEFT_INT:           MOVE_BLOCK_LEFT; SHADOW; break;
+		case FALL_INT:           MOVE_BLOCK_FALL; SHADOW; break;
+		case SHADOW_FALL_INT:    MOVE_SHADOW_FALL; break;
 	}
 	return TRUE;
 }
 
 void next_level(){
-    	double b = 1000000, a = 300000, k = 5 * pow(10,-8), e = 2.71828182846;
-	delay = a / (1 + (pow(e,(-k * a * (level - 1)))) * ((a / b) - 1));
+    	double b = 1000000, a = 300000, k = pow(10,-7), e = 2.71828182846;
+	delay = a / (1 + (pow(e,(-k * a * level))) * ((a / b) - 1));
 }
 
 int shuffle(int start, int stop) {
@@ -73,7 +76,6 @@ void newqueue() {
 }
 
 void spawn_block() { 
-	int check = TRUE;
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
 	if (next_block == 3) ActiveBlox.x = 5;
@@ -88,12 +90,11 @@ void spawn_block() {
 	ActiveBlox.Blox.rgb = Block[next_block].rgb;
 	ActiveBlox.Blox.size = Block[next_block].size;
 	block_num++;
-	while (check == TRUE) check = DEL_ROWS;
+	destroy_rows();
 }
 
 void func_next_block() {
 	transform_block();
-	if(!(block_num % BLOCKS_PER_LEVEL)) next_level();
 	spawn_block();
 }
 
@@ -101,8 +102,14 @@ int init() {
     spawn_block();
     next_level();
     while (running) {
-        usleep((int) delay);
+        usleep((unsigned int) delay);
         FALL;
     }
-    return NULL;
+    return 0;
+}
+
+
+void gen_shadow() {
+	ActiveBlox.shadow_offset = 0;
+	while (possible(SHADOW_FALL_INT)) try_move(SHADOW_FALL_INT);
 }

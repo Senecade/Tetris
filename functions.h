@@ -1,6 +1,6 @@
 //possible @move.h
 //rotate @move.h
-int field[10][22],level,del_blocks;
+int field[10][22], level, block_num, next_block, del_blocks, running;
 double delay;
 int try_move(int movetype);
 void next_level();
@@ -10,4 +10,5 @@ void transform_block();
 void newqueue();
 void spawn_block();
 void func_next_block();
-void init();
+int init();
+void gen_shadow();

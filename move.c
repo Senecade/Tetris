@@ -57,41 +57,46 @@ int possible(int movetype) {
 			if (y<0 || y>21 || x<0 || x>9 || field[x][y] % 2 == 1) return FALSE;
 		}
 	}
-	//DOWN_INT geht immer
+	else if (movetype == SHADOW_FALL_INT) {
+		for(int i=0;i<4;i++) {
+			x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
+			y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y] + 1 + ActiveBlox.shadow_offset;
+			if (y<0 || y>21 || x<0 || x>9 || field[x][y] % 2 == 1) return FALSE;
+		}
+	}
 	return TRUE;
 }
 
-int destroy_rows(int output) {
-	int max = -1, ypos = -1, length = 0, full;
-	for (int y = 0; y<22;y++) {
+void destroy_rows() {
+	int full,ypos;
+	for (int y = 0; y < 22; y++) {
 		full = TRUE;
-		for (int x = 0; x<10;x++) {
-			if (max == -1 && field[x][y] % 2 == 1) max = y;
-			if (field[x][y] % 2 == 0 && full) full = FALSE;
+		for (int x = 0; x < 10; x++) {
+			if (field[x][y] % 2 == 0) {
+				full = FALSE;
+				break;
+			}
 		}
 		if (full) {
-			length++;
-			if (ypos == -1) ypos = y;
+			del_blocks++;
+			for (int w = y; w >= 0; w--) {
+				for (int v = 0; v < 10; v++) {
+					if (w == 0) {
+						field[v][w] = 0;
+					}
+					else {
+						field[v][w] = field[v][w - 1];
+						field[v][w - 1] = 0;
+					}
+				}
+
+			}
 		}
 	}
-	if (length == 0) return FALSE;
-	if (output == CHANGE_INT) {
-		for (int y = ypos; y < ypos + length; y++) {
-			for (int x = 0; x<10;x++) field[x][y] = (((255 <<8) + 255 <<8) + 255 <<1) + 1;
-		} // Felder weiß setzen (als Löschanzeige)
+	ypos = del_blocks / BLOCKS_PER_LEVEL; //Recycling von ypos
+	if (ypos > level) {
+		level = ypos;
+		next_level();
 	}
-	else {
-		for (int y = ypos; y < ypos + length; y++) {
-			for (int x = 0; x<10;x++) field[x][y] = 0;
-		} //Felder löschen
-		for (int y = ypos - 1;y>=max;y--) //Rückwärts durchlaufen um richtig zu kopieren
-			for (int x = 0; x<10; x++) {
-				field[x][y + length] = field[x][y];
-				field[x][y] = 0;
-			}
-	}
-	del_blocks += length;
-	level = del_blocks / 8 + 1;
-	next_level();
-	return TRUE;
+	return;
 }

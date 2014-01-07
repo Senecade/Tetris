@@ -42,6 +42,7 @@ void updateWindow(){
     }
     BLOX_RGB(R,G,B);
     for(int i = 0; i<4;i++){
+	if(ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x+ActiveBlox.Blox.points[i][X],ActiveBlox.y+ActiveBlox.Blox.points[i][Y]+ActiveBlox.shadow_offset,130,130,130);
         drawBlock(ActiveBlox.x+ActiveBlox.Blox.points[i][X],ActiveBlox.y+ActiveBlox.Blox.points[i][Y],R,G,B);
     }
     glFlush();  // Render now
@@ -72,6 +73,7 @@ void *keyboard(int key, int x, int y){
             break;
     }
     updateWindow();
+    return NULL;
 }
 void arrowInput(int key, int x, int y){
     switch(key){	

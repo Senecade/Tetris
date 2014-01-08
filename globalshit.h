@@ -15,7 +15,7 @@
 #define FALSE 0
 
 #define MOVE_BLOCK_RIGHT ActiveBlox.x++
-#define MOVE_BLOCK_DOWN do FALL; while (possible(FALL_INT))
+#define MOVE_BLOCK_DOWN while (FALL)
 #define MOVE_BLOCK_LEFT ActiveBlox.x--
 #define MOVE_BLOCK_FALL ActiveBlox.y++
 #define ROTATE_BLOCK_RIGHT rotate(ROTATION_RIGHT_INT)

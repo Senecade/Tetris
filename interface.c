@@ -17,8 +17,8 @@ void drawBlock(int x, int y, int R, int G, int B){
     ox2 = ox1 + 1/5.0;
     oy2 = oy1 - 1/10.0;
     
-    glColor3f(0,0,0);
-    glRectf(ox1,oy1,ox2,oy2);
+    //glColor3f(0,0,0);
+    //glRectf(ox1,oy1,ox2,oy2);
     
     //Inner Block
     ix1 = ox1 + 2.0/WINDOW_WIDTH;
@@ -32,17 +32,15 @@ void drawBlock(int x, int y, int R, int G, int B){
 void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
-
-    //printf("%i | %i\n",ActiveBlox.x,ActiveBlox.y);
     int R,G,B;
-    for(int y = 0; y<22;y++){
+    for(int y = 2; y<22;y++){
         for(int x = 0;x<10;x++){
             if(FIELD_RGB(x,y,R,G,B))drawBlock(x,y,R,G,B);
         }
     }
     BLOX_RGB(R,G,B);
     for(int i = 0; i<4;i++){
-	if(ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x+ActiveBlox.Blox.points[i][X],ActiveBlox.y+ActiveBlox.Blox.points[i][Y]+ActiveBlox.shadow_offset,130,130,130);
+	if (ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x+ActiveBlox.Blox.points[i][X],ActiveBlox.y+ActiveBlox.Blox.points[i][Y]+ActiveBlox.shadow_offset,130,130,130);
     }
     for(int i = 0; i<4;i++){
         drawBlock(ActiveBlox.x+ActiveBlox.Blox.points[i][X],ActiveBlox.y+ActiveBlox.Blox.points[i][Y],R,G,B);
@@ -53,7 +51,7 @@ void updateWindow(){
 void display(){
     updateWindow();
 }
-void *keyboard(int key, int x, int y){
+void keyboard(unsigned char key, int x, int y){
     switch(key){
         case 'q':
             ROTATE_LEFT;
@@ -75,7 +73,7 @@ void *keyboard(int key, int x, int y){
             break;
     }
     updateWindow();
-    return NULL;
+    return;
 }
 void arrowInput(int key, int x, int y){
     switch(key){	
@@ -98,7 +96,7 @@ void arrowInput(int key, int x, int y){
 void glutTimer()
 {
     glutPostRedisplay();
-    glutTimerFunc(1, glutTimer, NULL);
+    glutTimerFunc(1, glutTimer, 0);
 }
 void initWindow(int argc, char** argv){
     glutInit(&argc, argv);
@@ -108,9 +106,9 @@ void initWindow(int argc, char** argv){
     glutDisplayFunc(display);
     glutKeyboardFunc(&keyboard);
     glutSpecialFunc(arrowInput);
-    glutTimerFunc(1,glutTimer , NULL);
+    glutTimerFunc(1,glutTimer , 0);
     glutMainLoop();
 }
-void initWindowSDL(){
-    
+void * initWindowSDL(void * thing){
+	return NULL;    
 }

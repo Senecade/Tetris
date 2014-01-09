@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <pthread.h>
 #include "struct.h"
 #include "move.h"
 #include "globalshit.h"
@@ -64,7 +63,7 @@ void transform_block() {
 		x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
 		y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y];
 		field[x][y] = ActiveBlox.Blox.rgb;
-	} 
+	}
 }
 
 void newqueue() {
@@ -80,7 +79,7 @@ void newqueue() {
 	}
 }
 
-void spawn_block() { 
+void spawn_block() {
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
 	if (next_block == 3) ActiveBlox.x = 4;
@@ -98,7 +97,7 @@ void spawn_block() {
 }
 
 void func_next_block() {
-	transform_block();	
+	transform_block();
 	destroy_rows();
 	spawn_block();
 }

@@ -9,6 +9,10 @@
 #define ROTATION_LEFT_INT 6
 #define SHADOW_FALL_INT 7
 
+#define FIELD_INT 0
+#define SHADOW_INT 1
+#define BLOX_INT 2
+
 #define X 0
 #define Y 1
 #define TRUE 1

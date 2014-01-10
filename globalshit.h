@@ -34,8 +34,11 @@
 #define ROTATE_LEFT try_move(ROTATION_LEFT_INT)
 #define SHADOW gen_shadow()
 
-#define INIT init()
+#define INIT init(NULL)
 
 #define BLOX_RGB(R, G, B) block_to_rgb(ActiveBlox.Blox.rgb, &(R), &(G), &(B))
 #define FIELD_RGB(X, Y, R, G, B) block_to_rgb(field[(X)][(Y)], &(R), &(G), &(B))
 #define RGB_INT(R, G, B) (((((((R) <<8) + (G)) <<8) + (B))<<1) + 1)
+
+#define MAX(a, b, c) (((a)>(b)) ? (((c)>(a)) ? (c) : (a)):(((c)>(b)) ? (c) : (b)))
+#define MIN(a, b, c) (((a)<(b)) ? (((c)<(a)) ? (c) : (a)):(((c)<(b)) ? (c) : (b)))

@@ -8,11 +8,11 @@ void rotate(int direct) {
 		hx = ActiveBlox.Blox.points[i][X];
 		hy = ActiveBlox.Blox.points[i][Y];
 		if (direct == ROTATION_LEFT_INT) {
-			ActiveBlox.Blox.points[i][X] = n - hy;	
+			ActiveBlox.Blox.points[i][X] = n - hy;
 			ActiveBlox.Blox.points[i][Y] = hx;
 		}
 		else {
-	   		ActiveBlox.Blox.points[i][X] = hy; 
+	   		ActiveBlox.Blox.points[i][X] = hy;
 			ActiveBlox.Blox.points[i][Y] = n - hx;
 		}
     	}

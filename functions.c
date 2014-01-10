@@ -5,13 +5,11 @@
 #include "move.h"
 #include "globalshit.h"
 #include "interface.h"
-#include <sys/time.h>
-#include <signal.h>
+#include <time.h>
 #include "functions.h"
 
 int field[10][22] = {{0}}, level = 0, block_num = 0, del_blocks = 0, running = TRUE;
-struct itimerval timer;
-struct sigaction act = {{0}};
+struct timespec timer;
 
 int try_move(int movetype){
 	if (possible(movetype) == FALSE) {
@@ -33,12 +31,12 @@ int try_move(int movetype){
 }
 
 void next_level(){
-    	double b = 1000, a = 300 /*in ms*/, k = pow(10,-7), e = 2.71828182846;
-	a *= 1000;
-	b *= 1000;
+    	double b = 1000, a = 250 /*in ms*/, k = pow(10,-7), e = 2.71828182846;
+	a *= 1000000;
+	b *= 1000000;
 	delay = a / (1 + (pow(e,(-k * a * level))) * ((a / b) - 1));
-	timer.it_interval.tv_sec = (int) delay / 1000000;
-	timer.it_interval.tv_usec = (int) delay % 1000000;
+	timer.tv_sec = (int) (delay / 1000000000);
+	timer.tv_nsec = (int) delay % 1000000000;
 }
 
 int shuffle(int start, int stop) {
@@ -91,9 +89,66 @@ void spawn_block() {
 	}
 	ActiveBlox.Blox.rgb = Block[next_block].rgb;
 	ActiveBlox.Blox.size = Block[next_block].size;
-	if (possible(FALL_INT)) FALL;
-	else /* TODO:Game Over Screen*/ exit(0);
+	if (!(FALL)) exit(0); // TODO:Game Over Screen
 	block_num++;
+}
+
+void hsv_to_rgb(const double H, const double S, const double V, int *R, int *G, int *B) {
+	int h_i;
+	double f,p,q,t;
+	h_i = (int) (H/60);
+	f = H/60 - h_i;
+	p = V * (1 - S);
+	q = V * (1 - S * f);
+	t = V * (1 - S * (1 - f));
+	switch (h_i) {
+		case 0: *R = (int) 255*V;
+			*G = (int) 255*t;
+			*B = (int) 255*p;
+			break;
+		case 1: *R = (int) 255*q;
+			*G = (int) 255*V;
+			*B = (int) 255*p;
+			break;
+		case 2: *R = (int) 255*p;
+			*G = (int) 255*V;
+			*B = (int) 255*t;
+			break;
+		case 3: *R = (int) 255*p;
+			*G = (int) 255*q;
+			*B = (int) 255*V;
+			break;
+		case 4: *R = (int) 255*t;
+			*G = (int) 255*p;
+			*B = (int) 255*V;
+			break;
+		case 5: *R = (int) 255*V;
+			*G = (int) 255*p;
+			*B = (int) 255*q;
+			break;
+		case 6: *R = (int) 255*V;
+			*G = (int) 255*t;
+			*B = (int) 255*p;
+	}
+}
+
+void rgb_to_hsv(int R,int G,int B, double *H, double *S, double *V) {
+	double max,min,r,g,b;
+	r = R / 255.0;
+	g = G / 255.0;
+	b = B / 255.0;
+	min = (r <= g) ? r : g;
+	min = (min <= b) ? min : b;
+	max = (r >= g) ? r : g;
+	max = (max >= b) ? max : b;
+	if (max == min) *H = 0;
+	else if (max == r) *H = 60 * (0 + ((g - b) / (max - min)));
+	else if (max == g) *H = 60 * (2 + ((b - r) / (max - min)));
+	else  *H = 60 * (4 + ((r - g) / (max - min)));
+	if (*H < 0) *H = *H + 360;
+	if (max == 0) *S = 0;
+	else *S = (max - min) / max;
+	*V = max;
 }
 
 void func_next_block() {
@@ -116,13 +171,10 @@ void * init(void * thing) {
 	}
 	spawn_block();
 	next_level();
-	act.sa_handler = &gravity;
-	sigaction(SIGALRM, &act, NULL);
-	timer.it_value.tv_sec = (int) delay / 1000000;
-	timer.it_value.tv_usec = (int) delay % 1000000;
-	timer.it_interval.tv_sec = (int) delay / 1000000;
-	timer.it_interval.tv_usec = (int) delay % 1000000;
-	setitimer(ITIMER_REAL, &timer, NULL);
+	while (running) {
+		nanosleep(&timer,NULL);
+		FALL;
+	}
 	return NULL;
 }
 
@@ -130,8 +182,4 @@ void * init(void * thing) {
 void gen_shadow() {
 	ActiveBlox.shadow_offset = 0;
 	while (try_move(SHADOW_FALL_INT));
-}
-
-void gravity(int signum) {
-	FALL;
 }

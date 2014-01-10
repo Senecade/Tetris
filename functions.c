@@ -8,7 +8,7 @@
 #include <time.h>
 #include "functions.h"
 
-int field[10][22] = {{0}}, level = 0, block_num = 0, del_blocks = 0, running = TRUE;
+int field[10][22] = {{0}}, level = 1, block_num = 0, del_blocks = 0, running = TRUE;
 struct timespec timer;
 
 int try_move(int movetype){
@@ -31,12 +31,13 @@ int try_move(int movetype){
 }
 
 void next_level(){
-    	double b = 1000, a = 250 /*in ms*/, k = pow(10,-7), e = 2.71828182846;
+    	double b = 1000, a = 250 /*in ms*/, k = pow(10,-10), e = 2.71828182846;
 	a *= 1000000;
 	b *= 1000000;
 	delay = a / (1 + (pow(e,(-k * a * level))) * ((a / b) - 1));
 	timer.tv_sec = (int) (delay / 1000000000);
 	timer.tv_nsec = (int) delay % 1000000000;
+	printf("Level:%d\n",level);
 }
 
 int shuffle(int start, int stop) {
@@ -60,7 +61,7 @@ void transform_block() {
 	for (int i=0;i<4;i++) {
 		x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
 		y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y];
-		field[x][y] = ActiveBlox.Blox.rgb;
+		if (x>=0 && x<10 && y>=0 && y<22) field[x][y] = ActiveBlox.Blox.rgb;
 	}
 }
 
@@ -93,7 +94,7 @@ void spawn_block() {
 	block_num++;
 }
 
-void hsv_to_rgb(const double H, const double S, const double V, int *R, int *G, int *B) {
+void hsv_to_rgb(const double H, const double S, const double V, unsigned char *R, unsigned char *G, unsigned char *B) {
 	int h_i;
 	double f,p,q,t;
 	h_i = (int) (H/60);
@@ -132,29 +133,37 @@ void hsv_to_rgb(const double H, const double S, const double V, int *R, int *G, 
 	}
 }
 
-void rgb_to_hsv(int R,int G,int B, double *H, double *S, double *V) {
-	double max,min,r,g,b;
+void rgb_to_hsv(const unsigned char R, const unsigned char G, const unsigned char B, double *H, double *S, double *V) {
+	double max,min,r,g,b,C;
 	r = R / 255.0;
 	g = G / 255.0;
 	b = B / 255.0;
-	min = (r <= g) ? r : g;
-	min = (min <= b) ? min : b;
-	max = (r >= g) ? r : g;
-	max = (max >= b) ? max : b;
-	if (max == min) *H = 0;
-	else if (max == r) *H = 60 * (0 + ((g - b) / (max - min)));
-	else if (max == g) *H = 60 * (2 + ((b - r) / (max - min)));
-	else  *H = 60 * (4 + ((r - g) / (max - min)));
+	min = (r < g) ? r : g;
+	min = (min < b) ? min : b;
+	max = (r > g) ? r : g;
+	max = (max > b) ? max : b;
+	*V = max;
+	C = max - min;
+	if (C == 0) *H = 0;
+	else if (max == r) *H = 60 * (0 + ((g - b) / C));
+	else if (max == g) *H = 60 * (2 + ((b - r) / C));
+	else  *H = 60 * (4 + ((r - g) / C));
 	if (*H < 0) *H = *H + 360;
 	if (max == 0) *S = 0;
 	else *S = (max - min) / max;
-	*V = max;
 }
 
 void func_next_block() {
+	struct timespec wait;
 	transform_block();
-	destroy_rows();
+	wait.tv_sec = 0;
+	wait.tv_nsec = 300000000;
 	spawn_block();
+	if(destroy_rows(MARK_ROWS_INT) == TRUE) {
+		updateWindow();
+		nanosleep(&wait,NULL);
+		destroy_rows(DEL_ROWS_INT);
+	}
 }
 
 void * init(void * thing) {

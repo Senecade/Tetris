@@ -67,8 +67,8 @@ int possible(int movetype) {
 	return TRUE;
 }
 
-void destroy_rows() {
-	int full,ypos;
+int destroy_rows(int type) {
+	int full,ypos,todo = FALSE;
 	for (int y = 0; y < 22; y++) {
 		full = TRUE;
 		for (int x = 0; x < 10; x++) {
@@ -77,7 +77,11 @@ void destroy_rows() {
 				break;
 			}
 		}
-		if (full) {
+		if (type == MARK_ROWS_INT && full) {
+			todo = TRUE;
+			for (int v = 0; v<10; v++) field[v][y] = RGB_INT(255,255,255);
+		}
+		if (type == DEL_ROWS_INT && full) {
 			del_blocks++;
 			for (int w = y; w >= 0; w--) {
 				for (int v = 0; v < 10; v++) {
@@ -98,5 +102,5 @@ void destroy_rows() {
 		level = ypos;
 		next_level();
 	}
-	return;
+	return todo;
 }

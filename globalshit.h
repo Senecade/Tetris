@@ -13,6 +13,9 @@
 #define SHADOW_INT 1
 #define BLOX_INT 2
 
+#define MARK_ROWS_INT 0
+#define DEL_ROWS_INT 1
+
 #define X 0
 #define Y 1
 #define TRUE 1

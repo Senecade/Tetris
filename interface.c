@@ -9,15 +9,20 @@ enum{
     WINDOW_HEIGHT = 600,
     WINDOW_WIDTH = 300
 };
-void drawBlock(int x, int y, int R, int G, int B, int blocktype){
+void drawBlock(int x, int y, const int R, const int G, const int B, int blocktype){
 	float ox1,oy1,ox2,oy2;
-	//double H, S, V;
+	double H, S, V;
+	unsigned char r, g, b;
 	ox1 = -1 + x / 5.0 + 3.0 / WINDOW_WIDTH;
-	oy1 = 1 - (y - 2) / 10.0 - 1.0 / WINDOW_HEIGHT;
+	oy1 = 1 - (y - 2) / 10.0 - 1.5 / WINDOW_HEIGHT;
 	ox2 = ox1 + 1 / 5.0 - 3.0 / WINDOW_WIDTH;
-	oy2 = oy1 - 1 / 10.0 + 1.0 / WINDOW_HEIGHT;
+	oy2 = oy1 - 1 / 10.0 + 1.5 / WINDOW_HEIGHT;
 	if (blocktype == SHADOW_INT) {
-		glColor3ub(R,G,B);
+		rgb_to_hsv(R, G, B, &H, &S, &V);
+		S = (S - 0.6 > 0) ? (S - 0.6) : 0;
+		V = 0.25;
+		hsv_to_rgb(H, S, V, &r, &g, &b);
+		glColor3ub(r,g,b);
 		glRectf(ox1,oy1,ox2,oy2);
 	}
 	else {
@@ -26,36 +31,52 @@ void drawBlock(int x, int y, int R, int G, int B, int blocktype){
 		iy1 = oy1 - 10.0 / WINDOW_HEIGHT;
 		ix2 = ox2 - 10.0 / WINDOW_WIDTH;
 		iy2 = oy2 + 10.0 / WINDOW_HEIGHT;
-		glColor3ub((unsigned char) R, (unsigned char) G, (unsigned char) B);
-		glBegin(GL_QUADS);
+		rgb_to_hsv(R, G, B, &H, &S, &V);
+		S = (S - 0.4 > 0) ? (S - 0.4) : 0;
+		V = 1;
+		hsv_to_rgb(H, S, V, &r, &g, &b);
+		glColor3ub(r, g, b);
+		glBegin(GL_QUADS); //oben
 			glVertex2f(ox1,oy1);
 			glVertex2f(ox2,oy1);
 			glVertex2f(ix2,iy1);
 			glVertex2f(ix1,iy1);
 		glEnd();
-		glColor3ub((unsigned char) (0.7 * R), (unsigned char) (0.7 * G), (unsigned char) (0.7 * B));
-		glBegin(GL_QUADS);
+		rgb_to_hsv(R, G, B, &H, &S, &V);
+		S = (S - 0.1 > 0) ? (S - 0.1) : 0;
+		V = 0.7;
+		hsv_to_rgb(H, S, V, &r, &g, &b);
+		glColor3ub(r, g, b);
+		glBegin(GL_QUADS); //rechts
 			glVertex2f(ox2,oy1);
 			glVertex2f(ox2,oy2);
 			glVertex2f(ix2,iy2);
 			glVertex2f(ix2,iy1);
 		glEnd();
-		glColor3ub((unsigned char) (0.6 * R), (unsigned char) (0.6 * G), (unsigned char) (0.6 * B));
-		glBegin(GL_QUADS);
+		rgb_to_hsv(R, G, B, &H, &S, &V);
+		S = (S - 0.2 > 0) ? (S - 0.2) : 0;
+		V = 0.4;
+		hsv_to_rgb(H, S, V, &r, &g, &b);
+		glColor3ub(r, g, b);
+		glBegin(GL_QUADS); //unten
 			glVertex2f(ox2,oy2);
 			glVertex2f(ox1,oy2);
 			glVertex2f(ix1,iy2);
 			glVertex2f(ix2,iy2);
 		glEnd();
-		glColor3ub((unsigned char) (0.9 * R), (unsigned char) (0.9 * G), (unsigned char) (0.9 * B));
-		glBegin(GL_QUADS);
+		rgb_to_hsv(R, G, B, &H, &S, &V);
+		S = (S - 0.1 > 0) ? (S - 0.1) : 0;
+		V = 0.8;
+		hsv_to_rgb(H, S, V, &r, &g, &b);
+		glColor3ub(r, g, b);
+		glBegin(GL_QUADS); //links
 			glVertex2f(ox1,oy2);
 			glVertex2f(ox1,oy1);
 			glVertex2f(ix1,iy1);
 			glVertex2f(ix1,iy2);
 		glEnd();
-		glColor3ub((unsigned char) (0.8 * R), (unsigned char) (0.8 * G), (unsigned char) (0.8 * B));
-		glRectf(ix1,iy1,ix2,iy2);
+		glColor3ub(R, G, B);
+		glRectf(ix1,iy1,ix2,iy2); //Mitte
 	}
 }
 void updateWindow(){
@@ -69,7 +90,7 @@ void updateWindow(){
     }
     BLOX_RGB(R,G,B);
     for (int i = 0; i<4;i++) {
-	if (ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y] + ActiveBlox.shadow_offset, (int)(0.2 * R),(int) (0.2 * G), (int)(0.2 * B), SHADOW_INT);
+	if (ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y] + ActiveBlox.shadow_offset, R, G, B, SHADOW_INT);
     }
     for (int i = 0; i<4;i++) {
         drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y], R, G, B, BLOX_INT);

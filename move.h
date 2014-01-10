@@ -1,3 +1,3 @@
 void rotate(int direct);
 int possible(int movetype);
-void destroy_rows();
+int destroy_rows(int type);

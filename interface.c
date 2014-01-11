@@ -33,7 +33,7 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 		ix2 = ox2 - 10.0 / WINDOW_WIDTH;
 		iy2 = oy2 + 10.0 / WINDOW_HEIGHT;
 		rgb_to_hsv(R, G, B, &H, &S, &V);
-		S = (S - 0.4 > 0) ? (S - 0.4) : 0;
+		S = (S - 0.5 > 0) ? (S - 0.5) : 0;
 		V = 1;
 		hsv_to_rgb(H, S, V, &r, &g, &b);
 		glColor3ub(r, g, b);
@@ -45,7 +45,7 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 		glEnd();
 		rgb_to_hsv(R, G, B, &H, &S, &V);
 		S = (S - 0.1 > 0) ? (S - 0.1) : 0;
-		V = 0.7;
+		V = 0.6;
 		hsv_to_rgb(H, S, V, &r, &g, &b);
 		glColor3ub(r, g, b);
 		glBegin(GL_QUADS); //rechts
@@ -56,7 +56,7 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 		glEnd();
 		rgb_to_hsv(R, G, B, &H, &S, &V);
 		S = (S - 0.2 > 0) ? (S - 0.2) : 0;
-		V = 0.4;
+		V = 0.3;
 		hsv_to_rgb(H, S, V, &r, &g, &b);
 		glColor3ub(r, g, b);
 		glBegin(GL_QUADS); //unten
@@ -67,7 +67,7 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 		glEnd();
 		rgb_to_hsv(R, G, B, &H, &S, &V);
 		S = (S - 0.1 > 0) ? (S - 0.1) : 0;
-		V = 0.8;
+		V = 0.6;
 		hsv_to_rgb(H, S, V, &r, &g, &b);
 		glColor3ub(r, g, b);
 		glBegin(GL_QUADS); //links

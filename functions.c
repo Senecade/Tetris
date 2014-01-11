@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <GL/glut.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
+#include <pthread.h>
 #include "struct.h"
 #include "move.h"
 #include "globalshit.h"
 #include "interface.h"
-#include <time.h>
 #include "functions.h"
 
 int field[10][22] = {{0}}, level = 1, block_num = 0, del_blocks = 0, running = TRUE;
@@ -90,7 +92,7 @@ void spawn_block() {
 	}
 	ActiveBlox.Blox.rgb = Block[next_block].rgb;
 	ActiveBlox.Blox.size = Block[next_block].size;
-	if (!(FALL)) exit(0); // TODO:Game Over Screen
+	if (!(FALL)) exit_func(); // TODO:Game Over Screen
 	block_num++;
 }
 
@@ -191,4 +193,11 @@ void * init(void * thing) {
 void gen_shadow() {
 	ActiveBlox.shadow_offset = 0;
 	while (try_move(SHADOW_FALL_INT));
+}
+
+void exit_func() {
+	running = FALSE;
+	nanosleep(&timer,NULL);
+	nanosleep(&timer,NULL);
+	exit(0);
 }

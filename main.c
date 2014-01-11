@@ -7,11 +7,12 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-
 #define SDL 0
+
+
 int main(int argc, char** argv) {
-	srandom((unsigned int) time(NULL) * getpid());
 	pthread_t functions,interface;
+	srandom((unsigned int) time(NULL) * getpid());
 	int error;
 	error = pthread_create(&functions,NULL,&init,NULL);
 	if(error){

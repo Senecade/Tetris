@@ -10,6 +10,7 @@ enum{
     WINDOW_WIDTH = 300
 };
 void drawBlock(int x, int y, const int R, const int G, const int B, int blocktype){
+	if (y<0 || y>21 || x<0 || x>9) return;
 	float ox1,oy1,ox2,oy2;
 	double H, S, V;
 	unsigned char r, g, b;
@@ -143,10 +144,9 @@ void arrowInput(int key, int x, int y){
     updateWindow();
 }
 
-void glutTimer()
-{
-    glutPostRedisplay();
-    glutTimerFunc(10, glutTimer, 0);
+void glutTimer(){
+	glutPostRedisplay();
+	if(running) glutTimerFunc(1, glutTimer, 0);
 }
 void initWindow(int argc, char** argv){
     glutInit(&argc, argv);
@@ -156,7 +156,7 @@ void initWindow(int argc, char** argv){
     glutDisplayFunc(display);
     glutKeyboardFunc(&keyboard);
     glutSpecialFunc(arrowInput);
-    glutTimerFunc(10,glutTimer , 0);
+    glutTimerFunc(1,glutTimer , 1);
     glutMainLoop();
 }
 void * initWindowSDL(void * thing){

@@ -12,3 +12,4 @@ void rgb_to_hsv(unsigned char R, unsigned char G, unsigned char B, double *H, do
 void func_next_block();
 void * init(void * thing);
 void gen_shadow();
+void exit_func();

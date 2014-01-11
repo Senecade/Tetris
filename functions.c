@@ -81,18 +81,21 @@ void newqueue() {
 }
 
 void spawn_block() {
+	for (int y = 0;y<2;y++) {
+		for (int x=0;x<10;x++) if (field[x][y]) exit(0);
+		// TODO:Game Over Screen
+	}
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
 	if (next_block == 3) ActiveBlox.x = 4;
 	else ActiveBlox.x = 3;
-	ActiveBlox.y = -1;
+	ActiveBlox.y = 0;
 	for (int i = 0; i < 4; i++) {
 		ActiveBlox.Blox.points[i][X] = Block[next_block].points[i][X];
 		ActiveBlox.Blox.points[i][Y] = Block[next_block].points[i][Y];
 	}
 	ActiveBlox.Blox.rgb = Block[next_block].rgb;
 	ActiveBlox.Blox.size = Block[next_block].size;
-	if (!(FALL)) exit_func(); // TODO:Game Over Screen
 	block_num++;
 }
 
@@ -157,9 +160,9 @@ void rgb_to_hsv(const unsigned char R, const unsigned char G, const unsigned cha
 
 void func_next_block() {
 	struct timespec wait;
-	transform_block();
 	wait.tv_sec = 0;
 	wait.tv_nsec = 300000000;
+	transform_block();
 	spawn_block();
 	if(destroy_rows(MARK_ROWS_INT) == TRUE) {
 		updateWindow();

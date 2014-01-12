@@ -4,19 +4,25 @@
 #include <stdio.h>
 #include "globalshit.h"
 #include <pthread.h>
-
+#include <stdlib.h>
+#include <sys/types.h>
+#include <unistd.h>
 #define SDL 0
 
 int main(int argc, char** argv) {
-    pthread_t functions,interface;
-    int error;
-    error = pthread_create(&functions,NULL,init,NULL);
-    if(error){
-        printf("Error: %d",error);
-    }
-    if(SDL){
-        initWindowSDL();
-    }
-    else initWindow(argc,argv);
-    return 0;
+	pthread_t functions,interface;
+	srandom((unsigned int) time(NULL) * getpid());
+	int error;
+	error = pthread_create(&functions,NULL,&init,NULL);
+	if(error){
+		printf("Error: %d",error);
+	}
+	if(SDL){
+		error = pthread_create(&interface,NULL,&initWindowSDL,NULL);
+		if(error){
+			printf("Error: %d",error);
+		}
+	}
+	else initWindow(argc,argv);
+	return 0;
 }

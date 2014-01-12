@@ -8,9 +8,10 @@ struct Blox Block[7];
 struct Active {
     	int x;
     	int y;
+	int shadow_offset;
     	struct Blox Blox;
 };
 
 struct Active ActiveBlox;
 
-int queue[7];
+int queue[14];

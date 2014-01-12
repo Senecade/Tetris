@@ -1,3 +1,10 @@
+#define WINDOW_HEIGHT 800
+#define WINDOW_WIDTH 500
+#define GAME_WINDOW_HEIGHT 600
+#define GAME_WINDOW_WIDTH 300
+#define OFFSET_X 100
+#define OFFSET_Y 100
+
 #define BLOCKS_PER_LEVEL 8
 
 #define UP_INT 0

@@ -5,19 +5,23 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 
-enum{
-    WINDOW_HEIGHT = 600,
-    WINDOW_WIDTH = 300
-};
+float BLOCK_WIDTH = (2*GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)/10;
+float BLOCK_BORDER_WIDTH = 3*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH) / WINDOW_WIDTH;
+float BLOCK_HEIGHT = (2*GAME_WINDOW_HEIGHT/(float)WINDOW_HEIGHT)/20;
+float BLOCK_BORDER_HEIGHT =  1.5*(GAME_WINDOW_HEIGHT/(float)WINDOW_HEIGHT) / WINDOW_HEIGHT;
+float BLOCK_OFFSET_X = 2 * OFFSET_X / (float)WINDOW_WIDTH;
+float BLOCK_OFFSET_Y = 2 * OFFSET_Y / (float)WINDOW_HEIGHT;
+
+
 void drawBlock(int x, int y, const int R, const int G, const int B, int blocktype){
-	if (y<0 || y>21 || x<0 || x>9) return;
+	if (y<2 || y>21 || x<0 || x>9) return;
 	float ox1,oy1,ox2,oy2;
 	double H, S, V;
 	unsigned char r, g, b;
-	ox1 = -1 + x / 5.0 + 3.0 / WINDOW_WIDTH;
-	oy1 = 1 - (y - 2) / 10.0 - 1.5 / WINDOW_HEIGHT;
-	ox2 = ox1 + 1 / 5.0 - 3.0 / WINDOW_WIDTH;
-	oy2 = oy1 - 1 / 10.0 + 1.5 / WINDOW_HEIGHT;
+	ox1 = -1 + x * BLOCK_WIDTH + BLOCK_BORDER_WIDTH + BLOCK_OFFSET_X;
+	oy1 = 1 - (y - 2) * BLOCK_HEIGHT - BLOCK_BORDER_HEIGHT - BLOCK_OFFSET_Y;
+	ox2 = ox1 + BLOCK_WIDTH - BLOCK_BORDER_WIDTH;
+	oy2 = oy1 - BLOCK_HEIGHT + BLOCK_BORDER_HEIGHT;
 	if (blocktype == SHADOW_INT) {
 		rgb_to_hsv(R, G, B, &H, &S, &V);
 		S = (S - 0.6 > 0) ? (S - 0.6) : 0;
@@ -80,9 +84,36 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 		glRectf(ix1,iy1,ix2,iy2); //Mitte
 	}
 }
+void drawInterface(){
+    ////////////////////////
+    //Draw border of field//
+    ////////////////////////
+    float x1,x2,y1,y2;
+    x1 = -1 + BLOCK_OFFSET_X - BLOCK_BORDER_WIDTH; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
+    x2 = x1 + 10 * BLOCK_WIDTH + 3 * BLOCK_BORDER_WIDTH;
+    y1 = 1 - BLOCK_OFFSET_Y + BLOCK_BORDER_HEIGHT;
+    y2 = y1 - 20 * BLOCK_HEIGHT - 3 * BLOCK_BORDER_HEIGHT;
+    
+    glColor3ub(255,255,255);
+    glBegin(GL_LINES);
+        glVertex2f(x1,y1);
+        glVertex2f(x2,y1);
+        
+        glVertex2f(x1,y2);
+        glVertex2f(x2,y2);
+        
+        glVertex2f(x1,y1);
+        glVertex2f(x1,y2);
+        
+        glVertex2f(x2,y1);
+        glVertex2f(x2,y2);
+    glEnd();
+    
+}
 void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
+    drawInterface();
     int R,G,B;
     for(int y = 2; y<22;y++){
         for(int x = 0;x<10;x++){
@@ -151,7 +182,7 @@ void glutTimer(){
 void initWindow(int argc, char** argv){
     glutInit(&argc, argv);
     glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
-    glutInitWindowPosition(600,200);
+    glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)/2-WINDOW_WIDTH/2,glutGet(GLUT_SCREEN_HEIGHT)/2-WINDOW_HEIGHT/2);
     glutCreateWindow("Tetris");
     glutDisplayFunc(display);
     glutKeyboardFunc(&keyboard);

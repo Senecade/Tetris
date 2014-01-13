@@ -1,4 +1,4 @@
-int field[10][22], level, block_num, next_block, del_blocks, running;
+int field[10][22], level, block_num, next_block, del_blocks, points, chain, running;
 double delay;
 int try_move(int movetype);
 void next_level();

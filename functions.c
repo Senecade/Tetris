@@ -10,7 +10,7 @@
 #include "interface.h"
 #include "functions.h"
 
-int field[10][22] = {{0}}, level = 1, block_num = 0, del_blocks = 0, running = TRUE;
+int field[10][22] = {{0}}, level = 1, block_num = 0, del_blocks = 0, points = 0, chain = 0, running = TRUE;
 struct timespec timer;
 
 int try_move(int movetype){
@@ -82,10 +82,8 @@ void newqueue() {
 
 
 void spawn_block() {
-	for (int y = 0;y<2;y++) {
-		for (int x=0;x<10;x++) if (field[x][y]) exit(0);
-		// TODO:Game Over Screen
-	}
+	for (int x=0;x<10;x++) if (field[x][1]) exit(0);
+	// TODO:Game Over Screen
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
 	if (next_block == 3) ActiveBlox.x = 4;
@@ -165,11 +163,13 @@ void func_next_block() {
 	wait.tv_nsec = 300000000;
 	transform_block();
 	spawn_block();
-	if(destroy_rows(MARK_ROWS_INT) == TRUE) {
+	if (destroy_rows(MARK_ROWS_INT) == TRUE) {
 		updateWindow();
 		nanosleep(&wait,NULL);
 		destroy_rows(DEL_ROWS_INT);
+		chain++;
 	}
+	else chain = 0;
 }
 
 void * init(void * thing) {

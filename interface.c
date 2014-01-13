@@ -3,7 +3,7 @@
 #include "struct.h"
 #include "globalshit.h"
 #include <stdio.h>
-#include <SDL/SDL.h>
+//#include <SDL/SDL.h>
 
 float BLOCK_WIDTH = (2*GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)/10;
 float BLOCK_BORDER_WIDTH = 3*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH) / WINDOW_WIDTH;
@@ -177,7 +177,7 @@ void arrowInput(int key, int x, int y){
 
 void glutTimer(){
 	glutPostRedisplay();
-	if(running) glutTimerFunc(1, glutTimer, 0);
+	if(running) glutTimerFunc(10, glutTimer, 0);
 }
 void initWindow(int argc, char** argv){
     glutInit(&argc, argv);
@@ -187,7 +187,7 @@ void initWindow(int argc, char** argv){
     glutDisplayFunc(display);
     glutKeyboardFunc(&keyboard);
     glutSpecialFunc(arrowInput);
-    glutTimerFunc(1,glutTimer , 1);
+    glutTimerFunc(10,glutTimer , 1);
     glutMainLoop();
 }
 

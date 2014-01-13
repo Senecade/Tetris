@@ -3,7 +3,7 @@
 #include "struct.h"
 #include "globalshit.h"
 #include <stdio.h>
-//#include <SDL/SDL.h>
+#include <SDL/SDL.h>
 
 float BLOCK_WIDTH = (2*GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)/10;
 float BLOCK_BORDER_WIDTH = 3*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH) / WINDOW_WIDTH;
@@ -12,6 +12,7 @@ float BLOCK_BORDER_HEIGHT =  1.5*(GAME_WINDOW_HEIGHT/(float)WINDOW_HEIGHT) / WIN
 float BLOCK_OFFSET_X = 2 * OFFSET_X / (float)WINDOW_WIDTH;
 float BLOCK_OFFSET_Y = 2 * OFFSET_Y / (float)WINDOW_HEIGHT;
 
+SDL_Surface* screen;
 
 void drawBlock(int x, int y, const int R, const int G, const int B, int blocktype){
 	if (y<2 || y>21 || x<0 || x>9) return;
@@ -84,7 +85,7 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 		glRectf(ix1,iy1,ix2,iy2); //Mitte
 	}
 }
-void drawInterface(){
+void drawInterface(void){
     ////////////////////////
     //Draw border of field//
     ////////////////////////
@@ -110,7 +111,7 @@ void drawInterface(){
     glEnd();
     
 }
-void updateWindow(){
+void updateWindow(void){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
     glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
     drawInterface();
@@ -130,7 +131,7 @@ void updateWindow(){
     glFlush();  // Render now
 
 }
-void display(){
+void display(void){
     updateWindow();
 }
 void keyboard(unsigned char key, int x, int y){
@@ -174,7 +175,6 @@ void arrowInput(int key, int x, int y){
     }
     updateWindow();
 }
-
 void glutTimer(){
 	glutPostRedisplay();
 	if(running) glutTimerFunc(10, glutTimer, 0);
@@ -190,9 +190,49 @@ void initWindow(int argc, char** argv){
     glutTimerFunc(10,glutTimer , 1);
     glutMainLoop();
 }
-
-/*
-void initWindowSDL(){
+void drawBlockSDL(int x, int y, const int R, const int G, const int B, int blocktype){
+    if (y<2 || y>21 || x<0 || x>9) return;
+    int blockHeight = GAME_WINDOW_HEIGHT/20;
+    int blockWidth = GAME_WINDOW_WIDTH/10;
+    int blockBorderHeight = blockHeight/20;
+    int blockBorderWidth = blockWidth/20;
+    SDL_Rect rect = {
+        OFFSET_X+x*blockWidth+blockBorderWidth,
+        OFFSET_Y+y*blockHeight+blockBorderHeight-2*blockHeight,
+        blockWidth-2*blockBorderWidth,
+        blockHeight-2*blockBorderHeight
+    };
+    int c = (R << 16) | (G << 8) | B;
+    SDL_FillRect(screen,&rect,c);
+}
+void drawInterfaceSDL(void){
+    int blockHeight = GAME_WINDOW_HEIGHT/20;
+    int blockWidth = GAME_WINDOW_WIDTH/10;
+    int blockBorderHeight = blockHeight/20;
+    int blockBorderWidth = blockWidth/20;
+    SDL_FillRect(screen,&((SDL_Rect){OFFSET_X-blockBorderWidth,OFFSET_Y-blockBorderHeight,1,GAME_WINDOW_HEIGHT+2*blockBorderHeight}),0xffffff);
+    SDL_FillRect(screen,&((SDL_Rect){OFFSET_X-blockBorderWidth,OFFSET_Y-blockBorderHeight,GAME_WINDOW_WIDTH+2*blockBorderWidth,1}),0xffffff);
+    SDL_FillRect(screen,&((SDL_Rect){OFFSET_X+GAME_WINDOW_WIDTH+blockBorderWidth,OFFSET_Y-blockBorderHeight,1,GAME_WINDOW_HEIGHT+2*blockBorderHeight}),0xffffff);
+    SDL_FillRect(screen,&((SDL_Rect){OFFSET_X-blockBorderWidth,OFFSET_Y+GAME_WINDOW_HEIGHT+blockBorderHeight,GAME_WINDOW_WIDTH+2*blockBorderWidth,1}),0xffffff);
+}
+void updateWindowSDL(void){
+    SDL_FillRect(screen,NULL,0x000000);
+    drawInterfaceSDL();
+    int R,G,B;
+    for(int y = 2; y<22;y++){
+        for(int x = 0;x<10;x++){
+            if(FIELD_RGB(x,y,R,G,B)) drawBlockSDL(x,y,R,G,B,FIELD_INT);
+        }
+    }
+    BLOX_RGB(R,G,B);
+    for (int i = 0; i<4;i++) {
+	if (ActiveBlox.shadow_offset > 0) drawBlockSDL(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y] + ActiveBlox.shadow_offset, R, G, B, SHADOW_INT);
+    }
+    for (int i = 0; i<4;i++) {
+        drawBlockSDL(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y], R, G, B, BLOX_INT);
+    }
+}
+void initWindowSDL(void){
     SDL_Init(SDL_INIT_VIDEO);
     screen = SDL_SetVideoMode(WINDOW_WIDTH,WINDOW_HEIGHT, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
     
@@ -206,18 +246,36 @@ void initWindowSDL(){
         SDL_Event event;
         while(SDL_PollEvent(&event)){
             switch(event.type){
+                case SDL_KEYDOWN:
+                    switch(event.key.keysym.sym){
+                        case SDLK_ESCAPE:
+                            running = 0;
+                            break;
+                        case SDLK_UP:
+                            ROTATE_RIGHT;
+                            break;
+                        case SDLK_DOWN:
+                            DOWN;
+                            break;
+                        case SDLK_LEFT:
+                            LEFT;
+                            break;
+                        case SDLK_RIGHT:
+                            RIGHT;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 case SDL_QUIT:
                     running = 0;
                     break;
             }
         }
+        updateWindowSDL();
         SDL_Flip(screen);
         SDL_Delay(10);
     }
     
     SDL_Quit();
-}
-*/
-void * initWindowSDL(void * thing){
-	return NULL;
 }

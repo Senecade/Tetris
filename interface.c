@@ -4,6 +4,7 @@
 #include "globalshit.h"
 #include <stdio.h>
 //#include <SDL/SDL.h>
+#include <FTGL/ftgl.h>
 
 float BLOCK_WIDTH = (2*GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)/10;
 float BLOCK_BORDER_WIDTH = 3*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH) / WINDOW_WIDTH;
@@ -11,7 +12,6 @@ float BLOCK_HEIGHT = (2*GAME_WINDOW_HEIGHT/(float)WINDOW_HEIGHT)/20;
 float BLOCK_BORDER_HEIGHT =  1.5*(GAME_WINDOW_HEIGHT/(float)WINDOW_HEIGHT) / WINDOW_HEIGHT;
 float BLOCK_OFFSET_X = 2 * OFFSET_X / (float)WINDOW_WIDTH;
 float BLOCK_OFFSET_Y = 2 * OFFSET_Y / (float)WINDOW_HEIGHT;
-
 
 void drawBlock(int x, int y, const int R, const int G, const int B, int blocktype){
 	if (y<2 || y>21 || x<0 || x>9) return;
@@ -85,30 +85,33 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 	}
 }
 void drawInterface(){
-    ////////////////////////
-    //Draw border of field//
-    ////////////////////////
-    float x1,x2,y1,y2;
-    x1 = -1 + BLOCK_OFFSET_X - BLOCK_BORDER_WIDTH; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
-    x2 = x1 + 10 * BLOCK_WIDTH + 3 * BLOCK_BORDER_WIDTH;
-    y1 = 1 - BLOCK_OFFSET_Y + BLOCK_BORDER_HEIGHT;
-    y2 = y1 - 20 * BLOCK_HEIGHT - 3 * BLOCK_BORDER_HEIGHT;
-    
-    glColor3ub(255,255,255);
-    glBegin(GL_LINES);
-        glVertex2f(x1,y1);
-        glVertex2f(x2,y1);
-        
-        glVertex2f(x1,y2);
-        glVertex2f(x2,y2);
-        
-        glVertex2f(x1,y1);
-        glVertex2f(x1,y2);
-        
-        glVertex2f(x2,y1);
-        glVertex2f(x2,y2);
-    glEnd();
-    
+	////////////////////////
+	//Draw border of field//
+	////////////////////////
+	float x1,x2,y1,y2;
+	x1 = -1 + BLOCK_OFFSET_X - BLOCK_BORDER_WIDTH; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
+	x2 = x1 + 10 * BLOCK_WIDTH + 3 * BLOCK_BORDER_WIDTH;
+	y1 = 1 - BLOCK_OFFSET_Y + BLOCK_BORDER_HEIGHT;
+	y2 = y1 - 20 * BLOCK_HEIGHT - 3 * BLOCK_BORDER_HEIGHT;
+	glColor3ub(255,255,255);
+	glBegin(GL_LINES);
+	glVertex2f(x1,y1);
+	glVertex2f(x2,y1);
+	glVertex2f(x1,y2);
+	glVertex2f(x2,y2);
+	glVertex2f(x1,y1);
+	glVertex2f(x1,y2);
+	glVertex2f(x2,y1);
+	glVertex2f(x2,y2);
+	glEnd();
+	FTGLfont *font = ftglCreatePixmapFont("./Dimbo.ttf");
+	if(!font) {
+		printf("Error loading Font\n");
+		exit(1);
+	}
+	ftglSetFontFaceSize(font, 30, 30);
+	glRasterPos2f(0.3, 0.8);
+	ftglRenderFont(font, "Level:", FTGL_RENDER_ALL);
 }
 void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
@@ -180,17 +183,16 @@ void glutTimer(){
 	if(running) glutTimerFunc(10, glutTimer, 0);
 }
 void initWindow(int argc, char** argv){
-    glutInit(&argc, argv);
-    glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
-    glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)/2-WINDOW_WIDTH/2,glutGet(GLUT_SCREEN_HEIGHT)/2-WINDOW_HEIGHT/2);
-    glutCreateWindow("Tetris");
-    glutDisplayFunc(display);
-    glutKeyboardFunc(&keyboard);
-    glutSpecialFunc(arrowInput);
-    glutTimerFunc(10,glutTimer , 1);
-    glutMainLoop();
+	glutInit(&argc, argv);
+	glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
+	glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)/2-WINDOW_WIDTH/2,glutGet(GLUT_SCREEN_HEIGHT)/2-WINDOW_HEIGHT/2);
+	glutCreateWindow("Tetris");
+	glutDisplayFunc(display);
+	glutKeyboardFunc(&keyboard);
+	glutSpecialFunc(arrowInput);
+	glutTimerFunc(10,glutTimer , 1);
+	glutMainLoop();
 }
-
 /*
 void initWindowSDL(){
     SDL_Init(SDL_INIT_VIDEO);

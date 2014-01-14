@@ -106,8 +106,7 @@ int destroy_rows(int type) {
 		case 1: points += 100 * (1 + chain/10.0);
 		default: break;
 	}
-	if (rows>0) printf("Punkte:%d\n",points);
-	ypos = del_blocks / BLOCKS_PER_LEVEL; //Recycling von ypos
+	ypos = del_blocks / BLOCKS_PER_LEVEL + 1; //Recycling von ypos
 	if (ypos > level) {
 		level = ypos;
 		next_level();

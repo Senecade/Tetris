@@ -39,7 +39,6 @@ void next_level(){
 	delay = a / (1 + (pow(e,(-k * a * level))) * ((a / b) - 1));
 	timer.tv_sec = (int) (delay / 1000000000);
 	timer.tv_nsec = (int) delay % 1000000000;
-	printf("Level:%d\n",level);
 }
 
 int shuffle(int start, int stop) {

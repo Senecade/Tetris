@@ -10,6 +10,7 @@
 #define SDL 0
 
 int main(int argc, char** argv) {
+	font = ftglCreatePixmapFont("./Dimbo.ttf");
 	pthread_t functions,interface;
 	srandom((unsigned int) time(NULL) * getpid());
 	int error;

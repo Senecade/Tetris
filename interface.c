@@ -104,14 +104,21 @@ void drawInterface(){
 	glVertex2f(x2,y1);
 	glVertex2f(x2,y2);
 	glEnd();
-	FTGLfont *font = ftglCreatePixmapFont("./Dimbo.ttf");
+	char strlevel[50], strpoints[50], strlines[50];
+	sprintf(strlevel,"Level: %d",level);
+	sprintf(strpoints,"Points: %d",points);
+	sprintf(strlines,"Lines %d",del_blocks);
 	if(!font) {
 		printf("Error loading Font\n");
 		exit(1);
 	}
 	ftglSetFontFaceSize(font, 30, 30);
 	glRasterPos2f(0.3, 0.8);
-	ftglRenderFont(font, "Level:", FTGL_RENDER_ALL);
+	ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);
+	glRasterPos2f(0.3, 0.7);
+	ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);
+	glRasterPos2f(0.3, 0.6);
+	ftglRenderFont(font, strlines, FTGL_RENDER_ALL);
 }
 void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque

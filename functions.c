@@ -13,6 +13,12 @@
 int field[10][22] = {{0}}, level = 1, block_num = 0, del_blocks = 0, points = 0, chain = 0, running = TRUE;
 struct timespec timer;
 
+int shuffle(int start, int stop);
+void transform_block();
+void newqueue();
+void spawn_block();
+void func_next_block();
+
 int try_move(int movetype){
 	if (possible(movetype) == FALSE) {
 		if (movetype == FALL_INT) {
@@ -47,13 +53,11 @@ int shuffle(int start, int stop) {
 }
 
 int block_to_rgb(int rgb, int *r, int *g, int *b) {
-	if (rgb % 2 == 0) return FALSE;
+	if ((rgb % 2) == 0) return FALSE;
 	rgb = rgb >>1;
-	*b = rgb % 256;
-	rgb = rgb >>8;
-	*g = rgb % 256;
-	rgb = rgb >>8;
-	*r = rgb % 256;
+	*r = (rgb & 0xff0000) >>16;
+	*g = (rgb & 0x00ff00) >>8;
+	*b = (rgb & 0x0000ff);
 	return TRUE;
 }
 

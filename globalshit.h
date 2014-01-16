@@ -48,4 +48,4 @@
 
 #define BLOX_RGB(R, G, B) block_to_rgb(ActiveBlox.Blox.rgb, &(R), &(G), &(B))
 #define FIELD_RGB(X, Y, R, G, B) block_to_rgb(field[(X)][(Y)], &(R), &(G), &(B))
-#define RGB_INT(R, G, B) (((((((R) <<8) + (G)) <<8) + (B))<<1) + 1)
+#define RGB_INT(R, G, B) (((R) << 17) | ((G) <<9) | ((B) <<1) | 1)

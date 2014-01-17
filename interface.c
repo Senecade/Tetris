@@ -94,30 +94,26 @@ void drawInterface(){
 	y1 = 1 - BLOCK_OFFSET_Y + BLOCK_BORDER_HEIGHT;
 	y2 = y1 - 20 * BLOCK_HEIGHT - 3 * BLOCK_BORDER_HEIGHT;
 	glColor3ub(255,255,255);
-	glBegin(GL_LINES);
+	glBegin(GL_LINE_LOOP);
 	glVertex2f(x1,y1);
 	glVertex2f(x2,y1);
-	glVertex2f(x1,y2);
 	glVertex2f(x2,y2);
-	glVertex2f(x1,y1);
 	glVertex2f(x1,y2);
-	glVertex2f(x2,y1);
-	glVertex2f(x2,y2);
 	glEnd();
 	char strlevel[50], strpoints[50], strlines[50];
-	sprintf(strlevel,"Level: %d",level);
-	sprintf(strpoints,"Points: %d",points);
-	sprintf(strlines,"Lines %d",del_blocks);
+	sprintf(strlevel, "Level: %d", level);
+	sprintf(strpoints, "Points: %d", points);
+	sprintf(strlines, "Lines %d", lines);
 	if(!font) {
 		printf("Error loading Font\n");
-		exit(1);
+		return;
 	}
-	ftglSetFontFaceSize(font, 30, 30);
+	ftglSetFontFaceSize(font, 35, 35);
 	glRasterPos2f(0.3, 0.8);
 	ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);
-	glRasterPos2f(0.3, 0.7);
+	glRasterPos2f(0.3, 0.5);
 	ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);
-	glRasterPos2f(0.3, 0.6);
+	glRasterPos2f(0.3, 0.35);
 	ftglRenderFont(font, strlines, FTGL_RENDER_ALL);
 }
 void updateWindow(){

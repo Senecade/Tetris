@@ -10,7 +10,7 @@
 #include "interface.h"
 #include "functions.h"
 
-int field[10][22] = {{0}}, level = 1, block_num = 0, del_blocks = 0, points = 0, chain = 0, running = TRUE;
+int field[10][22] = {{0}}, level = 1, block_num = 0, lines = 0, lvl_blox = 0, points = 0, chain = 0, running = TRUE;
 struct timespec timer;
 
 int shuffle(int start, int stop);
@@ -83,9 +83,8 @@ void newqueue() {
 	}
 }
 
-
 void spawn_block() {
-	for (int x=0;x<10;x++) if (field[x][1]) exit(0);
+	for (int x=0;x<10;x++) if (field[x][1]) exit_func();
 	// TODO:Game Over Screen
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
@@ -204,7 +203,8 @@ void gen_shadow() {
 
 void exit_func() {
 	running = FALSE;
-	nanosleep(&timer,NULL);
-	nanosleep(&timer,NULL);
+	struct timespec shortdelay = {1,0};
+	nanosleep(&shortdelay ,NULL);
+	ftglDestroyFont(font);
 	exit(0);
 }

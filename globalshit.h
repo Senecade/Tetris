@@ -5,7 +5,7 @@
 #define OFFSET_X 25
 #define OFFSET_Y 25
 
-#define BLOCKS_PER_LEVEL 8
+#define BLOCKS_PER_LEVEL 5
 
 #define UP_INT 0
 #define RIGHT_INT 1

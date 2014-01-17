@@ -1,7 +1,6 @@
 #include "struct.h"
 #include "globalshit.h"
 #include "functions.h"
-#include <stdio.h>
 
 void rotate(int direct) {
     	int hx,hy,n = ActiveBlox.Blox.size - 1;
@@ -69,7 +68,7 @@ int possible(int movetype) {
 }
 
 int destroy_rows(int type) {
-	int full, ypos, todo = FALSE, rows = 0;
+	int full, todo = FALSE, rows = 0;
 	for (int y = 0; y < 22; y++) {
 		full = TRUE;
 		for (int x = 0; x < 10; x++) {
@@ -98,17 +97,18 @@ int destroy_rows(int type) {
 			}
 		}
 	}
-	del_blocks += rows;
+	lines += rows;
+	lvl_blox += rows;
 	switch (rows) {
-		case 4: points += 500 * (1 + chain/10.0);
-		case 3: points += 250 * (1 + chain/10.0);
-		case 2: points += 150 * (1 + chain/10.0);
+		case 4: points += 400 * (1 + chain/10.0);
+		case 3: points += 300 * (1 + chain/10.0);
+		case 2: points += 200 * (1 + chain/10.0);
 		case 1: points += 100 * (1 + chain/10.0);
 		default: break;
 	}
-	ypos = del_blocks / BLOCKS_PER_LEVEL + 1; //Recycling von ypos
-	if (ypos > level) {
-		level = ypos;
+	if (lvl_blox >= level * BLOCKS_PER_LEVEL) {
+		level++;
+		lvl_blox = 0;
 		next_level();
 	}
 	return todo;

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
@@ -203,8 +203,8 @@ void gen_shadow() {
 
 void exit_func() {
 	running = FALSE;
-	struct timespec shortdelay = {1,0};
-	nanosleep(&shortdelay ,NULL);
 	ftglDestroyFont(font);
+	glutLeaveMainLoop();
+	nanosleep(&((struct timespec) {1,0}),NULL);
 	exit(0);
 }

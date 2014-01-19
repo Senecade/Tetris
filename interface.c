@@ -1,4 +1,4 @@
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include "functions.h"
 #include "struct.h"
 #include "globalshit.h"
@@ -110,11 +110,14 @@ void drawInterface(){
 	}
 	ftglSetFontFaceSize(font, 35, 35);
 	glRasterPos2f(0.3, 0.8);
-	ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);
+	/*ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);*/
+	for(int i=0;strlevel[i];i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int) strlevel[i]);
 	glRasterPos2f(0.3, 0.5);
-	ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);
+	/*ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);*/
+	for(int i=0;strlevel[i];i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int) strpoints[i]);
 	glRasterPos2f(0.3, 0.35);
-	ftglRenderFont(font, strlines, FTGL_RENDER_ALL);
+	/*ftglRenderFont(font, strlines, FTGL_RENDER_ALL);*/
+	for(int i=0;strlevel[i];i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int) strlines[i]);
 }
 void updateWindow(){
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
@@ -183,7 +186,7 @@ void arrowInput(int key, int x, int y){
 
 void glutTimer(){
 	glutPostRedisplay();
-	if(running) glutTimerFunc(10, glutTimer, 0);
+	glutTimerFunc(10, glutTimer, 0);
 }
 void initWindow(int argc, char** argv){
 	glutInit(&argc, argv);

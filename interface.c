@@ -3,7 +3,7 @@
 #include "struct.h"
 #include "globalshit.h"
 #include <stdio.h>
-//#include <SDL/SDL.h>
+/*#include <SDL/SDL.h>*/
 #include <FTGL/ftgl.h>
 
 float BLOCK_WIDTH = (2*GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)/10;
@@ -95,10 +95,10 @@ void drawInterface(){
 	y2 = y1 - 20 * BLOCK_HEIGHT - 3 * BLOCK_BORDER_HEIGHT;
 	glColor3ub(255,255,255);
 	glBegin(GL_LINE_LOOP);
-	glVertex2f(x1,y1);
-	glVertex2f(x2,y1);
-	glVertex2f(x2,y2);
-	glVertex2f(x1,y2);
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y1);
+		glVertex2f(x2,y2);
+		glVertex2f(x1,y2);
 	glEnd();
 	char strlevel[50], strpoints[50], strlines[50];
 	sprintf(strlevel, "Level: %d", level);
@@ -110,58 +110,68 @@ void drawInterface(){
 	}
 	ftglSetFontFaceSize(font, 35, 35);
 	glRasterPos2f(0.3, 0.8);
-	/*ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);*/
-	for(int i=0;strlevel[i];i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int) strlevel[i]);
+	ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);
 	glRasterPos2f(0.3, 0.5);
-	/*ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);*/
-	for(int i=0;strlevel[i];i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int) strpoints[i]);
+	ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);
 	glRasterPos2f(0.3, 0.35);
-	/*ftglRenderFont(font, strlines, FTGL_RENDER_ALL);*/
-	for(int i=0;strlevel[i];i++) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18,(int) strlines[i]);
+	ftglRenderFont(font, strlines, FTGL_RENDER_ALL);
 }
 void updateWindow(){
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-    glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
-    drawInterface();
-    int R,G,B;
-    for(int y = 2; y<22;y++){
-        for(int x = 0;x<10;x++){
-            if(FIELD_RGB(x,y,R,G,B)) drawBlock(x,y,R,G,B,FIELD_INT);
-        }
-    }
-    BLOX_RGB(R,G,B);
-    for (int i = 0; i<4;i++) {
-	if (ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y] + ActiveBlox.shadow_offset, R, G, B, SHADOW_INT);
-    }
-    for (int i = 0; i<4;i++) {
-        drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y], R, G, B, BLOX_INT);
-    }
-    glFlush();  // Render now
-
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+	glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
+	drawInterface();
+	int R,G,B;
+	float left,bottom;
+	for(int y = 2; y<22;y++){
+		for(int x = 0;x<10;x++){
+			if(FIELD_RGB(x,y,R,G,B)) drawBlock(x,y,R,G,B,FIELD_INT);
+		}
+	}
+	BLOX_RGB(R,G,B);
+	for (int i = 0; i<4;i++) {
+		if (ActiveBlox.shadow_offset > 0) drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y] + ActiveBlox.shadow_offset, R, G, B, SHADOW_INT);
+	}
+	for (int i = 0; i<4;i++) {
+		drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y], R, G, B, BLOX_INT);
+	}
+	if (!running) {
+		glColor3ub(255,255,255);
+		left = -1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "- paused -") / WINDOW_WIDTH));
+		bottom = 0.5 * (35.0 / WINDOW_HEIGHT);
+		glRasterPos2f(left, bottom);
+		ftglRenderFont(font, "- paused -", FTGL_RENDER_ALL);
+	}
+	glFlush();  // Render now
 }
 void display(){
     updateWindow();
 }
 void keyboard(unsigned char key, int x, int y){
-    switch(key){
+	switch(key){
         case 'q':
-            ROTATE_LEFT;
+            if (running) ROTATE_LEFT;
             break;
         case 'e':
-            ROTATE_RIGHT;
+            if (running) ROTATE_RIGHT;
             break;
         case 'a':
-            LEFT;
+            if (running) LEFT;
             break;
         case 's':
-            FALL;
+            if (running) FALL;
             break;
         case 'w':
-            DOWN;
+            if (running) DOWN;
             break;
         case 'd':
-            RIGHT;
+            if (running) RIGHT;
             break;
+        case 'c':
+	    running = TRUE;
+            break;
+	case 'p':
+	    running = FALSE;
+	    break;
     }
     updateWindow();
     return;
@@ -169,16 +179,16 @@ void keyboard(unsigned char key, int x, int y){
 void arrowInput(int key, int x, int y){
     switch(key){
         case GLUT_KEY_UP:
-            ROTATE_RIGHT;
+            if (running) ROTATE_RIGHT;
             break;
         case GLUT_KEY_DOWN:
-            DOWN;
+            if (running) DOWN;
             break;
         case GLUT_KEY_LEFT:
-            LEFT;
+            if (running) LEFT;
             break;
         case GLUT_KEY_RIGHT:
-            RIGHT;
+            if (running) RIGHT;
             break;
     }
     updateWindow();

@@ -4,6 +4,7 @@
 #include <math.h>
 #include <time.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "struct.h"
 #include "move.h"
 #include "globalshit.h"
@@ -85,7 +86,6 @@ void newqueue() {
 
 void spawn_block() {
 	for (int x=0;x<10;x++) if (field[x][1]) exit_func();
-	// TODO:Game Over Screen
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
 	if (next_block == 3) ActiveBlox.x = 4;
@@ -188,9 +188,9 @@ void * init(void * thing) {
 	}
 	spawn_block();
 	next_level();
-	while (running) {
+	while (TRUE) {
 		nanosleep(&timer,NULL);
-		FALL;
+		if (running) FALL;
 	}
 	return NULL;
 }
@@ -202,9 +202,6 @@ void gen_shadow() {
 }
 
 void exit_func() {
-	running = FALSE;
-	ftglDestroyFont(font);
-	glutLeaveMainLoop();
-	nanosleep(&((struct timespec) {1,0}),NULL);
-	exit(0);
+	//TODO: Add Game-Over-Screen
+	_exit(0);
 }

@@ -1,4 +1,5 @@
 #include <GL/freeglut.h>
+#include <string.h>
 #include "functions.h"
 #include "struct.h"
 #include "globalshit.h"
@@ -134,12 +135,12 @@ void updateWindow(){
 	for (int i = 0; i<4;i++) {
 		drawBlock(ActiveBlox.x + ActiveBlox.Blox.points[i][X], ActiveBlox.y + ActiveBlox.Blox.points[i][Y], R, G, B, BLOX_INT);
 	}
-	if (!running) {
+	if (strcmp(message,"")) {
 		glColor3ub(255,255,255);
-		left = -1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "- paused -") / WINDOW_WIDTH));
+		left = -1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, message) / WINDOW_WIDTH));
 		bottom = -0.98 + (WINDOW_HEIGHT - GAME_WINDOW_HEIGHT - OFFSET_Y - ftglGetFontLineHeight(font)) / WINDOW_HEIGHT;
 		glRasterPos2f(left, bottom);
-		ftglRenderFont(font, "- paused -", FTGL_RENDER_ALL);
+		ftglRenderFont(font, message, FTGL_RENDER_ALL);
 	}
 	glFlush();  // Render now
 }
@@ -170,9 +171,11 @@ void keyboard(unsigned char key, int x, int y){
             RIGHT;
             break;
         case 'c':
+	    change_message("");
 	    running = TRUE;
             break;
 	case 'p':
+	    change_message("- paused -");
 	    running = FALSE;
 	    break;
     }
@@ -207,7 +210,7 @@ void initWindow(int argc, char** argv){
 	glutCreateWindow("Tetris");
 	glutReshapeFunc(resize);
 	glutDisplayFunc(display);
-	glutKeyboardFunc(&keyboard);
+	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(arrowInput);
 	glutTimerFunc(10,glutTimer , 1);
 	glutMainLoop();

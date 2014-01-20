@@ -106,6 +106,8 @@ int destroy_rows(int type) {
 		case 1: points += 100 * (1 + chain/10.0);
 		default: break;
 	}
+	if (rows == 4) change_message("- Tetris -");
+	else change_message("");
 	if (lvl_blox >= level * BLOCKS_PER_LEVEL) {
 		level++;
 		lvl_blox = 0;

@@ -2,6 +2,7 @@
 
 int field[10][22], level, block_num, next_block, lines, lvl_blox, points, chain, running;
 double delay;
+char * message;
 FTGLfont *font;
 
 int try_move(int movetype);
@@ -13,3 +14,4 @@ void new_game(void);
 void * gravity(void * thing);
 void gen_shadow(void);
 void exit_func(void);
+void change_message(const char * string);

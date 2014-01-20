@@ -5,6 +5,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <string.h>
 #include "struct.h"
 #include "move.h"
 #include "globalshit.h"
@@ -170,9 +171,16 @@ void func_next_block(void) {
 		updateWindow();
 		nanosleep(&wait,NULL);
 		destroy_rows(DEL_ROWS_INT);
-		chain++;
+		char strchain[50];
+		if(chain++ > 0) {
+			sprintf(strchain,"- chain +%d -",chain - 1);
+			change_message(strchain);
+		}
 	}
-	else chain = 0;
+	else {
+		chain = 0;
+		change_message("");
+	}
 }
 
 void new_game(void) {
@@ -194,7 +202,7 @@ void new_game(void) {
 void * gravity(void * thing) {
 	while (TRUE) {
 		nanosleep(&timer,NULL);
-		if (running) FALL;
+		FALL;
 	}
 	return NULL;
 }
@@ -208,4 +216,9 @@ void gen_shadow(void) {
 void exit_func(void) {
 	//TODO: Add Game-Over-Screen
 	_exit(0);
+}
+
+void change_message(const char * string) {
+	message = realloc(message, sizeof (char) * (1 + strlen(string)));
+	message = strcpy(message,string);
 }

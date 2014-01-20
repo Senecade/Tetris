@@ -11,6 +11,7 @@
 
 int main(int argc, char** argv) {
 	font = ftglCreatePixmapFont("./Dimbo.ttf");
+	message = calloc(1,sizeof (char));
 	pthread_t functions,interface;
 	srandom((unsigned int) time(NULL) * getpid());
 	new_game();

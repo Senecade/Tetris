@@ -13,8 +13,9 @@ int main(int argc, char** argv) {
 	font = ftglCreatePixmapFont("./Dimbo.ttf");
 	pthread_t functions,interface;
 	srandom((unsigned int) time(NULL) * getpid());
+	new_game();
 	int error;
-	error = pthread_create(&functions,NULL,&init,NULL);
+	error = pthread_create(&functions,NULL,&gravity,NULL);
 	if(error){
 		printf("Error: %d",error);
 	}

@@ -15,12 +15,13 @@ int field[10][22] = {{0}}, level = 1, block_num = 0, lines = 0, lvl_blox = 0, po
 struct timespec timer;
 
 int shuffle(int start, int stop);
-void transform_block();
-void newqueue();
-void spawn_block();
-void func_next_block();
+void transform_block(void);
+void newqueue(void);
+void spawn_block(void);
+void func_next_block(void);
 
 int try_move(int movetype){
+	if (!running) return FALSE;
 	if (possible(movetype) == FALSE) {
 		if (movetype == FALL_INT) {
 		    func_next_block();
@@ -39,7 +40,7 @@ int try_move(int movetype){
 	return TRUE;
 }
 
-void next_level(){
+void next_level(void) {
     	double b = 1000, a = 250 /*in ms*/, k = pow(10,-10), e = 2.71828182846;
 	a *= 1000000;
 	b *= 1000000;
@@ -62,7 +63,7 @@ int block_to_rgb(int rgb, int *r, int *g, int *b) {
 	return TRUE;
 }
 
-void transform_block() {
+void transform_block(void) {
 	int x,y;
 	for (int i=0;i<4;i++) {
 		x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
@@ -71,7 +72,7 @@ void transform_block() {
 	}
 }
 
-void newqueue() {
+void newqueue(void) {
 	int z,help;
 	for (int i=0;i<7;i++) {
 		queue[i] = queue[i + 7];
@@ -84,7 +85,7 @@ void newqueue() {
 	}
 }
 
-void spawn_block() {
+void spawn_block(void) {
 	for (int x=0;x<10;x++) if (field[x][1]) exit_func();
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
@@ -159,7 +160,7 @@ void rgb_to_hsv(const unsigned char R, const unsigned char G, const unsigned cha
 	else *S = (max - min) / max;
 }
 
-void func_next_block() {
+void func_next_block(void) {
 	struct timespec wait;
 	wait.tv_sec = 0;
 	wait.tv_nsec = 300000000;
@@ -174,7 +175,7 @@ void func_next_block() {
 	else chain = 0;
 }
 
-void * init(void * thing) {
+void new_game(void) {
 	int z,help;
 	ActiveBlox.shadow_offset = 0;
 	for (int i=0;i<7;i++) {
@@ -188,6 +189,9 @@ void * init(void * thing) {
 	}
 	spawn_block();
 	next_level();
+}
+
+void * gravity(void * thing) {
 	while (TRUE) {
 		nanosleep(&timer,NULL);
 		if (running) FALL;
@@ -196,12 +200,12 @@ void * init(void * thing) {
 }
 
 
-void gen_shadow() {
+void gen_shadow(void) {
 	ActiveBlox.shadow_offset = 0;
 	while (try_move(SHADOW_FALL_INT));
 }
 
-void exit_func() {
+void exit_func(void) {
 	//TODO: Add Game-Over-Screen
 	_exit(0);
 }

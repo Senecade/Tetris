@@ -137,7 +137,7 @@ void updateWindow(){
 	if (!running) {
 		glColor3ub(255,255,255);
 		left = -1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "- paused -") / WINDOW_WIDTH));
-		bottom = 0.5 * (35.0 / WINDOW_HEIGHT);
+		bottom = -0.98 + (WINDOW_HEIGHT - GAME_WINDOW_HEIGHT - OFFSET_Y - ftglGetFontLineHeight(font)) / WINDOW_HEIGHT;
 		glRasterPos2f(left, bottom);
 		ftglRenderFont(font, "- paused -", FTGL_RENDER_ALL);
 	}
@@ -146,25 +146,28 @@ void updateWindow(){
 void display(){
     updateWindow();
 }
+void resize (int width, int height) {
+	glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
+}
 void keyboard(unsigned char key, int x, int y){
 	switch(key){
         case 'q':
-            if (running) ROTATE_LEFT;
+            ROTATE_LEFT;
             break;
         case 'e':
-            if (running) ROTATE_RIGHT;
+            ROTATE_RIGHT;
             break;
         case 'a':
-            if (running) LEFT;
+            LEFT;
             break;
         case 's':
-            if (running) FALL;
+            FALL;
             break;
         case 'w':
-            if (running) DOWN;
+            DOWN;
             break;
         case 'd':
-            if (running) RIGHT;
+            RIGHT;
             break;
         case 'c':
 	    running = TRUE;
@@ -179,21 +182,20 @@ void keyboard(unsigned char key, int x, int y){
 void arrowInput(int key, int x, int y){
     switch(key){
         case GLUT_KEY_UP:
-            if (running) ROTATE_RIGHT;
+            ROTATE_RIGHT;
             break;
         case GLUT_KEY_DOWN:
-            if (running) DOWN;
+            DOWN;
             break;
         case GLUT_KEY_LEFT:
-            if (running) LEFT;
+            LEFT;
             break;
         case GLUT_KEY_RIGHT:
-            if (running) RIGHT;
+            RIGHT;
             break;
     }
     updateWindow();
 }
-
 void glutTimer(){
 	glutPostRedisplay();
 	glutTimerFunc(10, glutTimer, 0);
@@ -203,6 +205,7 @@ void initWindow(int argc, char** argv){
 	glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
 	glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)/2-WINDOW_WIDTH/2,glutGet(GLUT_SCREEN_HEIGHT)/2-WINDOW_HEIGHT/2);
 	glutCreateWindow("Tetris");
+	glutReshapeFunc(resize);
 	glutDisplayFunc(display);
 	glutKeyboardFunc(&keyboard);
 	glutSpecialFunc(arrowInput);

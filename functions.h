@@ -5,10 +5,11 @@ double delay;
 FTGLfont *font;
 
 int try_move(int movetype);
-void next_level();
+void next_level(void);
 int block_to_rgb(int rgb, int *r, int *g, int *b);
 void hsv_to_rgb(const double H, const double S, const double V, unsigned char *R, unsigned char *G, unsigned char *B);
 void rgb_to_hsv(unsigned char R, unsigned char G, unsigned char B, double *H, double *S, double *V);
-void * init(void * thing);
-void gen_shadow();
-void exit_func();
+void new_game(void);
+void * gravity(void * thing);
+void gen_shadow(void);
+void exit_func(void);

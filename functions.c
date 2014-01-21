@@ -12,7 +12,7 @@
 #include "interface.h"
 #include "functions.h"
 
-int field[10][22] = {{0}}, level = 1, block_num = 0, lines = 0, lvl_blox = 0, points = 0, chain = 0, running = TRUE;
+int level = 1, block_num = 0, lines = 0, lvl_blox = 0, points = 0, chain = 0, running = TRUE, key_down = FALSE, menu = FALSE;
 struct timespec timer;
 
 int shuffle(int start, int stop);
@@ -93,12 +93,13 @@ void spawn_block(void) {
 	if (next_block == 3) ActiveBlox.x = 4;
 	else ActiveBlox.x = 3;
 	ActiveBlox.y = 0;
-	for (int i = 0; i < 4; i++) {
+	/*for (int i = 0; i < 4; i++) {
 		ActiveBlox.Blox.points[i][X] = Block[next_block].points[i][X];
 		ActiveBlox.Blox.points[i][Y] = Block[next_block].points[i][Y];
 	}
 	ActiveBlox.Blox.rgb = Block[next_block].rgb;
-	ActiveBlox.Blox.size = Block[next_block].size;
+	ActiveBlox.Blox.size = Block[next_block].size;*/
+	memcpy(&(ActiveBlox.Blox), &(Block[next_block]), sizeof Block[next_block]);
 	block_num++;
 }
 
@@ -185,6 +186,7 @@ void func_next_block(void) {
 
 void new_game(void) {
 	int z,help;
+	memset(field, 0, sizeof field);
 	ActiveBlox.shadow_offset = 0;
 	for (int i=0;i<7;i++) {
 		queue[i + 7] = i;
@@ -202,7 +204,7 @@ void new_game(void) {
 void * gravity(void * thing) {
 	while (TRUE) {
 		nanosleep(&timer,NULL);
-		FALL;
+		if(!key_down) FALL;
 	}
 	return NULL;
 }

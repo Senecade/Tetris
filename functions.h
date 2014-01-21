@@ -1,6 +1,6 @@
 #include <FTGL/ftgl.h>
 
-int field[10][22], level, block_num, next_block, lines, lvl_blox, points, chain, running;
+int field[10][22], level, block_num, next_block, lines, lvl_blox, points, chain, running, key_down, menu;
 double delay;
 char * message;
 FTGLfont *font;

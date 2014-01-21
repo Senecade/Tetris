@@ -14,6 +14,9 @@ float BLOCK_BORDER_HEIGHT =  1.5*(GAME_WINDOW_HEIGHT/(float)WINDOW_HEIGHT) / WIN
 float BLOCK_OFFSET_X = 2 * OFFSET_X / (float)WINDOW_WIDTH;
 float BLOCK_OFFSET_Y = 2 * OFFSET_Y / (float)WINDOW_HEIGHT;
 
+void game_keyboard(unsigned char key, int x, int y);
+void menu_keyboard(unsigned char key, int x, int y);
+
 void drawBlock(int x, int y, const int R, const int G, const int B, int blocktype){
 	if (y<2 || y>21 || x<0 || x>9) return;
 	float ox1,oy1,ox2,oy2;
@@ -86,21 +89,6 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 	}
 }
 void drawInterface(){
-	////////////////////////
-	//Draw border of field//
-	////////////////////////
-	float x1,x2,y1,y2;
-	x1 = -1 + BLOCK_OFFSET_X - BLOCK_BORDER_WIDTH; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
-	x2 = x1 + 10 * BLOCK_WIDTH + 3 * BLOCK_BORDER_WIDTH;
-	y1 = 1 - BLOCK_OFFSET_Y + BLOCK_BORDER_HEIGHT;
-	y2 = y1 - 20 * BLOCK_HEIGHT - 3 * BLOCK_BORDER_HEIGHT;
-	glColor3ub(255,255,255);
-	glBegin(GL_LINE_LOOP);
-		glVertex2f(x1,y1);
-		glVertex2f(x2,y1);
-		glVertex2f(x2,y2);
-		glVertex2f(x1,y2);
-	glEnd();
 	char strlevel[50], strpoints[50], strlines[50];
 	sprintf(strlevel, "Level: %d", level);
 	sprintf(strpoints, "Points: %d", points);
@@ -142,7 +130,48 @@ void updateWindow(){
 		glRasterPos2f(left, bottom);
 		ftglRenderFont(font, message, FTGL_RENDER_ALL);
 	}
-	glFlush();  // Render now
+	////////////////////////
+	//Draw border of field//
+	////////////////////////
+	float x1,x2,y1,y2;
+	x1 = -1 + BLOCK_OFFSET_X; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
+	x2 = x1 + 10 * BLOCK_WIDTH;
+	y1 = 1 - BLOCK_OFFSET_Y;
+	y2 = y1 - 20 * BLOCK_HEIGHT;
+	if (menu) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor4ub(0,0,0,230);
+		glBegin(GL_QUADS);
+			glVertex2f(x1,y1);
+			glVertex2f(x2,y1);
+			glVertex2f(x2,y2);
+			glVertex2f(x1,y2);
+		glEnd();
+		glDisable(GL_BLEND);
+		glColor3ub(255,255,255);
+		glRasterPos2f(-1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "[c]ontinue") / WINDOW_WIDTH)),
+			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.55) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
+		ftglRenderFont(font, "[c]ontinue", FTGL_RENDER_ALL);
+		glRasterPos2f(-1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "[n]ew game") / WINDOW_WIDTH)),
+			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.45) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
+		ftglRenderFont(font, "[n]ew game", FTGL_RENDER_ALL);
+		glRasterPos2f(-1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "[q]uit") / WINDOW_WIDTH)),
+			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.35) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
+		ftglRenderFont(font, "[q]uit", FTGL_RENDER_ALL);
+	}
+	x1 -= BLOCK_BORDER_WIDTH; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
+	x2 += 3 * BLOCK_BORDER_WIDTH;
+	y1 += BLOCK_BORDER_HEIGHT;
+	y2 -=  3 * BLOCK_BORDER_HEIGHT;
+	glColor3ub(255,255,255);
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y1);
+		glVertex2f(x2,y2);
+		glVertex2f(x1,y2);
+	glEnd();
+	glutSwapBuffers();  // Render now
 }
 void display(){
     updateWindow();
@@ -150,7 +179,7 @@ void display(){
 void resize (int width, int height) {
 	glutReshapeWindow(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
-void keyboard(unsigned char key, int x, int y){
+void game_keyboard(unsigned char key, int x, int y){
 	switch(key){
         case 'q':
             ROTATE_LEFT;
@@ -162,6 +191,7 @@ void keyboard(unsigned char key, int x, int y){
             LEFT;
             break;
         case 's':
+            key_down = TRUE;
             FALL;
             break;
         case 'w':
@@ -170,25 +200,23 @@ void keyboard(unsigned char key, int x, int y){
         case 'd':
             RIGHT;
             break;
-        case 'c':
-	    change_message("");
-	    running = TRUE;
-            break;
-	case 'p':
-	    change_message("- paused -");
+	case 27 /*ESC*/:
 	    running = FALSE;
+	    menu = TRUE;
+	    change_message("- paused -");
+	    glutKeyboardFunc(menu_keyboard);
 	    break;
     }
     updateWindow();
     return;
 }
-void arrowInput(int key, int x, int y){
+void game_arrowInput(int key, int x, int y){
     switch(key){
         case GLUT_KEY_UP:
             ROTATE_RIGHT;
             break;
         case GLUT_KEY_DOWN:
-            DOWN;
+	    DOWN;
             break;
         case GLUT_KEY_LEFT:
             LEFT;
@@ -199,19 +227,54 @@ void arrowInput(int key, int x, int y){
     }
     updateWindow();
 }
+void game_down_Release(unsigned char key, int x, int y){
+	switch(key) {
+	case 's':
+		key_down = FALSE;
+	}
+	updateWindow();
+}
+void menu_keyboard(unsigned char key, int x, int y) {
+	switch(key){
+	case 'n':
+		new_game();
+		menu = FALSE;
+		change_message("");
+		glutKeyboardFunc(game_keyboard);
+		running = TRUE;
+		break;
+	case 'q':
+		exit_func();
+		break;
+	case 'c':
+		menu = FALSE;
+		change_message("");
+		glutKeyboardFunc(game_keyboard);
+		running = TRUE;
+		break;
+	case 27 /*ESC*/:
+		menu = FALSE;
+		change_message("");
+		glutKeyboardFunc(game_keyboard);
+		running = TRUE;
+		break;
+	}
+}
 void glutTimer(){
 	glutPostRedisplay();
 	glutTimerFunc(10, glutTimer, 0);
 }
 void initWindow(int argc, char** argv){
 	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE);
 	glutInitWindowSize(WINDOW_WIDTH,WINDOW_HEIGHT);
 	glutInitWindowPosition(glutGet(GLUT_SCREEN_WIDTH)/2-WINDOW_WIDTH/2,glutGet(GLUT_SCREEN_HEIGHT)/2-WINDOW_HEIGHT/2);
 	glutCreateWindow("Tetris");
 	glutReshapeFunc(resize);
 	glutDisplayFunc(display);
-	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(arrowInput);
+	glutKeyboardFunc(game_keyboard);
+	glutKeyboardUpFunc(game_down_Release);
+	glutSpecialFunc(game_arrowInput);
 	glutTimerFunc(10,glutTimer , 1);
 	glutMainLoop();
 }

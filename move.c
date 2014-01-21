@@ -123,8 +123,7 @@ int destroy_rows(int type) {
 	}
 	if (lvl_blox >= level * BLOCKS_PER_LEVEL) {
 		change_message("- Level up -");
-		level++;
-		lvl_blox = 0;
+		lvl_blox -= level++ * BLOCKS_PER_LEVEL;
 		next_level();
 	}
 	return todo;

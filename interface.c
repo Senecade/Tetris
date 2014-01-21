@@ -89,14 +89,16 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 	}
 }
 void drawInterface(){
-	char strlevel[50], strpoints[50], strlines[50];
-	float x1,x2,y1,y2,lh,bb[6],bx1,bx2,by1,by2;
-	int r,g,b,x,y;
+	char strlevel[50], strpoints[50], strlines[50], strperc[10];
+	float x1,x2,y1,y2,lh,bb[6],bx1,bx2,by1,by2,off,plevel;
+	int r,g,b,x,y,z;
 	ftglSetFontFaceSize(font, 32, 32);
 	lh = 2 * ftglGetFontLineHeight(font) / WINDOW_WIDTH;
+	plevel = (float) lvl_blox / (level * BLOCKS_PER_LEVEL);
 	sprintf(strlevel, "Level: %d", level);
 	sprintf(strpoints, "Points: %d", points);
 	sprintf(strlines, "Lines: %d", lines);
+	sprintf(strperc, "%.0f%%", 100 * plevel);
 	if(!font) {
 		printf("Error loading Font\n");
 		return;
@@ -112,8 +114,15 @@ void drawInterface(){
 		glVertex2f(x2,y2);
 		glVertex2f(x1,y2);
 	glEnd();
+	glRectf(x1 + 0.05 - 2 / WINDOW_WIDTH, y1 - 0.05 + 2 / WINDOW_HEIGHT, x2 - 0.05 + 2 / WINDOW_WIDTH, y2 + lh - 2 / WINDOW_HEIGHT);
+	glColor3ub(0,0,0);
+	glRectf(x1 + 0.05, y1 - 0.05, x1 + 0.05 + plevel * (x2 - x1 - 0.1) , y2 + lh);
+	glColor3ub(150,150,150);
+	glRasterPos2f(0.5 * (x1 + x2) - ftglGetFontAdvance(font,strperc) / WINDOW_WIDTH, y2 + lh);
+	ftglRenderFont(font,strperc,FTGL_RENDER_ALL);
+	glColor3ub(255,255,255);
 	ftglGetFontBBox(font,strlevel,-1,bb);
-	glRasterPos2f(x1 + 0.05, 0.5 * (y1 + y2) - (bb[4]-bb[2]) / WINDOW_HEIGHT);
+	glRasterPos2f(x1 + 0.05, y2 + 0.5 * lh - (bb[4]-bb[2]) / WINDOW_HEIGHT);
 	ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);
 	y1 = y2 - 0.5 * lh;
 	y2 = y1 - lh;
@@ -123,7 +132,7 @@ void drawInterface(){
 		glVertex2f(x2,y2);
 		glVertex2f(x1,y2);
 	glEnd();
-	ftglGetFontBBox(font,strlevel,-1,bb);
+	ftglGetFontBBox(font,strpoints,-1,bb);
 	glRasterPos2f(x1 + 0.05, 0.5 * (y1 + y2) - (bb[4]-bb[2]) / WINDOW_HEIGHT);
 	ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);
 	y1 = y2 - 0.5 * lh;
@@ -134,7 +143,7 @@ void drawInterface(){
 		glVertex2f(x2,y2);
 		glVertex2f(x1,y2);
 	glEnd();
-	ftglGetFontBBox(font,strlevel,-1,bb);
+	ftglGetFontBBox(font,strlines,-1,bb);
 	glRasterPos2f(x1 + 0.05, 0.5 * (y1 + y2) - (bb[4]-bb[2]) / WINDOW_HEIGHT);
 	ftglRenderFont(font, strlines, FTGL_RENDER_ALL);
 	y1 = y2 - 0.5 * lh;
@@ -145,19 +154,22 @@ void drawInterface(){
 		glVertex2f(x2,y2);
 		glVertex2f(x1,y2);
 	glEnd();
-	/*for (int num = 1; num < 4; num++) {
-		block_to_rgb(Block[queue[block_num % 7 + num]].rgb,&r,&g,&b);
+	for (int num = 0; num < 3; num++) {
+		z = queue[block_num % 7 + num];
+		block_to_rgb(Block[z].rgb,&r,&g,&b);
 		glColor3ub(r,g,b);
+		if (z == 0) off = 0.25 * BLOCK_HEIGHT;
+		else off = 0.5 * BLOCK_HEIGHT;
 		for (int pt = 0; pt < 4; pt++) {
-			x = Block[queue[block_num % 7 + num]].points[pt][X];
-			y = Block[queue[block_num % 7 + num]].points[pt][Y];
-			bx1 = 0.5 * (x1 + x2 - Block[queue[block_num % 7 + num]].size * 0.5 * BLOCK_WIDTH) + x * 0.5 * BLOCK_WIDTH;
-			bx2 = bx1 + 0.5 * BLOCK_WIDTH;
-			by1 = y1 - (5*num + y + 1) * 0.5 * BLOCK_HEIGHT;
-			by2 = by1 + 0.5 * BLOCK_HEIGHT;
-			glRectf(bx1,bx2,by1,by2);
+			x = Block[z].points[pt][X];
+			y = Block[z].points[pt][Y];
+			bx1 = x1 + 0.5 * (x2 - x1 - Block[z].size * 0.5 * BLOCK_WIDTH) + x * 0.5 * BLOCK_WIDTH + 2 / WINDOW_WIDTH;
+			bx2 = bx1 + 0.5 * BLOCK_WIDTH - 2 / WINDOW_WIDTH;
+			by1 = y1 - (5 * num + y + 1) * 0.5 * BLOCK_HEIGHT - 0.5 * (y1 - y2 - 16 * 0.5 * BLOCK_HEIGHT) - 2 / WINDOW_HEIGHT - off;
+			by2 = by1 + 0.5 * BLOCK_HEIGHT - 2 / WINDOW_HEIGHT;
+			glRectf(bx1,by1,bx2,by2);
 		}
-	}*/
+	}
 }
 void updateWindow(){
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

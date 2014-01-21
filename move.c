@@ -1,6 +1,7 @@
 #include "struct.h"
 #include "globalshit.h"
 #include "functions.h"
+#include <stdio.h>
 
 void rotate(int direct) {
     	int hx,hy,n = ActiveBlox.Blox.size - 1;
@@ -99,16 +100,29 @@ int destroy_rows(int type) {
 	}
 	lines += rows;
 	lvl_blox += rows;
+	char strchain[50];
 	switch (rows) {
-		case 4: points += 400 * (1 + chain/10.0);
-		case 3: points += 300 * (1 + chain/10.0);
-		case 2: points += 200 * (1 + chain/10.0);
-		case 1: points += 100 * (1 + chain/10.0);
+		case 4:
+			points += 1000 * (1 + chain++ / 10.0);
+			change_message("- Tetris -");
+			break;
+		case 3:
+			points += 600 * (1 + chain++ / 10.0);
+			break;
+		case 2:
+			points += 300 * (1 + chain++ / 10.0);
+			break;
+		case 1:
+			points += 100 * (1 + chain++ / 10.0);
+			break;
 		default: break;
 	}
-	if (rows == 4) change_message("- Tetris -");
-	else change_message("");
+	if(chain > 1) {
+		sprintf(strchain,"- chain +%d -",chain - 1);
+		change_message(strchain);
+	}
 	if (lvl_blox >= level * BLOCKS_PER_LEVEL) {
+		change_message("- Level up -");
 		level++;
 		lvl_blox = 0;
 		next_level();

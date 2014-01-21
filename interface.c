@@ -90,24 +90,78 @@ void drawBlock(int x, int y, const int R, const int G, const int B, int blocktyp
 }
 void drawInterface(){
 	char strlevel[50], strpoints[50], strlines[50];
+	float x1,x2,y1,y2,lh,bb[6],bx1,bx2,by1,by2;
+	int r,g,b,x,y;
+	ftglSetFontFaceSize(font, 32, 32);
+	lh = 2 * ftglGetFontLineHeight(font) / WINDOW_WIDTH;
 	sprintf(strlevel, "Level: %d", level);
 	sprintf(strpoints, "Points: %d", points);
-	sprintf(strlines, "Lines %d", lines);
+	sprintf(strlines, "Lines: %d", lines);
 	if(!font) {
 		printf("Error loading Font\n");
 		return;
 	}
-	ftglSetFontFaceSize(font, 35, 35);
-	glRasterPos2f(0.3, 0.8);
+	x1 = -1 + 2 * (2 * OFFSET_X + GAME_WINDOW_WIDTH) / WINDOW_WIDTH;
+	x2 = 1 - BLOCK_OFFSET_X;
+	y1 = 1 - BLOCK_OFFSET_Y + BLOCK_BORDER_HEIGHT;
+	y2 = y1 - 2 * lh;
+	glColor3ub(255,255,255);
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y1);
+		glVertex2f(x2,y2);
+		glVertex2f(x1,y2);
+	glEnd();
+	ftglGetFontBBox(font,strlevel,-1,bb);
+	glRasterPos2f(x1 + 0.05, 0.5 * (y1 + y2) - (bb[4]-bb[2]) / WINDOW_HEIGHT);
 	ftglRenderFont(font, strlevel, FTGL_RENDER_ALL);
-	glRasterPos2f(0.3, 0.5);
+	y1 = y2 - 0.5 * lh;
+	y2 = y1 - lh;
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y1);
+		glVertex2f(x2,y2);
+		glVertex2f(x1,y2);
+	glEnd();
+	ftglGetFontBBox(font,strlevel,-1,bb);
+	glRasterPos2f(x1 + 0.05, 0.5 * (y1 + y2) - (bb[4]-bb[2]) / WINDOW_HEIGHT);
 	ftglRenderFont(font, strpoints, FTGL_RENDER_ALL);
-	glRasterPos2f(0.3, 0.35);
+	y1 = y2 - 0.5 * lh;
+	y2 = y1 - lh;
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y1);
+		glVertex2f(x2,y2);
+		glVertex2f(x1,y2);
+	glEnd();
+	ftglGetFontBBox(font,strlevel,-1,bb);
+	glRasterPos2f(x1 + 0.05, 0.5 * (y1 + y2) - (bb[4]-bb[2]) / WINDOW_HEIGHT);
 	ftglRenderFont(font, strlines, FTGL_RENDER_ALL);
+	y1 = y2 - 0.5 * lh;
+	y2 = 1 - BLOCK_OFFSET_Y - 20 * BLOCK_HEIGHT - 3 * BLOCK_BORDER_HEIGHT;
+	glBegin(GL_LINE_LOOP);
+		glVertex2f(x1,y1);
+		glVertex2f(x2,y1);
+		glVertex2f(x2,y2);
+		glVertex2f(x1,y2);
+	glEnd();
+	/*for (int num = 1; num < 4; num++) {
+		block_to_rgb(Block[queue[block_num % 7 + num]].rgb,&r,&g,&b);
+		glColor3ub(r,g,b);
+		for (int pt = 0; pt < 4; pt++) {
+			x = Block[queue[block_num % 7 + num]].points[pt][X];
+			y = Block[queue[block_num % 7 + num]].points[pt][Y];
+			bx1 = 0.5 * (x1 + x2 - Block[queue[block_num % 7 + num]].size * 0.5 * BLOCK_WIDTH) + x * 0.5 * BLOCK_WIDTH;
+			bx2 = bx1 + 0.5 * BLOCK_WIDTH;
+			by1 = y1 - (5*num + y + 1) * 0.5 * BLOCK_HEIGHT;
+			by2 = by1 + 0.5 * BLOCK_HEIGHT;
+			glRectf(bx1,bx2,by1,by2);
+		}
+	}*/
 }
 void updateWindow(){
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-	glClear(GL_COLOR_BUFFER_BIT);         // Clear the color buffer (background)
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 	drawInterface();
 	int R,G,B;
 	float left,bottom;
@@ -130,11 +184,8 @@ void updateWindow(){
 		glRasterPos2f(left, bottom);
 		ftglRenderFont(font, message, FTGL_RENDER_ALL);
 	}
-	////////////////////////
-	//Draw border of field//
-	////////////////////////
 	float x1,x2,y1,y2;
-	x1 = -1 + BLOCK_OFFSET_X; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
+	x1 = -1 + BLOCK_OFFSET_X;
 	x2 = x1 + 10 * BLOCK_WIDTH;
 	y1 = 1 - BLOCK_OFFSET_Y;
 	y2 = y1 - 20 * BLOCK_HEIGHT;
@@ -160,7 +211,7 @@ void updateWindow(){
 			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.35) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
 		ftglRenderFont(font, "[q]uit", FTGL_RENDER_ALL);
 	}
-	x1 -= BLOCK_BORDER_WIDTH; // 2*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)+2.5 / WINDOW_WIDTH;
+	x1 -= BLOCK_BORDER_WIDTH;
 	x2 += 3 * BLOCK_BORDER_WIDTH;
 	y1 += BLOCK_BORDER_HEIGHT;
 	y2 -=  3 * BLOCK_BORDER_HEIGHT;
@@ -171,7 +222,7 @@ void updateWindow(){
 		glVertex2f(x2,y2);
 		glVertex2f(x1,y2);
 	glEnd();
-	glutSwapBuffers();  // Render now
+	glutSwapBuffers();
 }
 void display(){
     updateWindow();
@@ -238,10 +289,8 @@ void menu_keyboard(unsigned char key, int x, int y) {
 	switch(key){
 	case 'n':
 		new_game();
-		menu = FALSE;
 		change_message("");
 		glutKeyboardFunc(game_keyboard);
-		running = TRUE;
 		break;
 	case 'q':
 		exit_func();

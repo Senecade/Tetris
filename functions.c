@@ -12,7 +12,6 @@
 #include "interface.h"
 #include "functions.h"
 
-int level = 1, block_num = 0, lines = 0, lvl_blox = 0, points = 0, chain = 0, running = TRUE, key_down = FALSE, menu = FALSE;
 struct timespec timer;
 
 int shuffle(int start, int stop);
@@ -42,10 +41,9 @@ int try_move(int movetype){
 }
 
 void next_level(void) {
-    	double b = 1000, a = 250 /*in ms*/, k = pow(10,-10), e = 2.71828182846;
-	a *= 1000000;
-	b *= 1000000;
-	delay = a / (1 + (pow(e,(-k * a * level))) * ((a / b) - 1));
+    	double b = 1000, a = 250 /*in ms*/, k = pow(10,-4), e = 2.71828182846;
+	delay = a / (1 + (pow(e,(-k * a * (level- 1)))) * ((a / b) - 1));
+	delay *= 1000000;
 	timer.tv_sec = (int) (delay / 1000000000);
 	timer.tv_nsec = (int) delay % 1000000000;
 }
@@ -93,12 +91,6 @@ void spawn_block(void) {
 	if (next_block == 3) ActiveBlox.x = 4;
 	else ActiveBlox.x = 3;
 	ActiveBlox.y = 0;
-	/*for (int i = 0; i < 4; i++) {
-		ActiveBlox.Blox.points[i][X] = Block[next_block].points[i][X];
-		ActiveBlox.Blox.points[i][Y] = Block[next_block].points[i][Y];
-	}
-	ActiveBlox.Blox.rgb = Block[next_block].rgb;
-	ActiveBlox.Blox.size = Block[next_block].size;*/
 	memcpy(&(ActiveBlox.Blox), &(Block[next_block]), sizeof Block[next_block]);
 	block_num++;
 }
@@ -172,11 +164,6 @@ void func_next_block(void) {
 		updateWindow();
 		nanosleep(&wait,NULL);
 		destroy_rows(DEL_ROWS_INT);
-		char strchain[50];
-		if(chain++ > 0) {
-			sprintf(strchain,"- chain +%d -",chain - 1);
-			change_message(strchain);
-		}
 	}
 	else {
 		chain = 0;
@@ -186,6 +173,15 @@ void func_next_block(void) {
 
 void new_game(void) {
 	int z,help;
+	level = 1;
+       	block_num = 0;
+	lines = 0;
+       	lvl_blox = 0;
+       	points = 0;
+       	chain = 0;
+       	running = TRUE;
+	key_down = FALSE;
+       	menu = FALSE;
 	memset(field, 0, sizeof field);
 	ActiveBlox.shadow_offset = 0;
 	for (int i=0;i<7;i++) {

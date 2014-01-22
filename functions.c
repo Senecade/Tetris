@@ -4,7 +4,6 @@
 #include <math.h>
 #include <time.h>
 #include <pthread.h>
-#include <unistd.h>
 #include <string.h>
 #include "struct.h"
 #include "move.h"
@@ -67,7 +66,11 @@ void transform_block(void) {
 	for (int i=0;i<4;i++) {
 		x = ActiveBlox.x + ActiveBlox.Blox.points[i][X];
 		y = ActiveBlox.y + ActiveBlox.Blox.points[i][Y];
-		if (x>=0 && x<10 && y>=0 && y<22) field[x][y] = ActiveBlox.Blox.rgb;
+		if (y>=2 && y<22 && x>=0  && x<10) field[x][y] = ActiveBlox.Blox.rgb;
+		else {
+			game_over();
+			return;
+		}
 	}
 }
 
@@ -85,7 +88,6 @@ void newqueue(void) {
 }
 
 void spawn_block(void) {
-	for (int x=0;x<10;x++) if (field[x][1]) exit_func();
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
 	if (next_block == 3) ActiveBlox.x = 4;
@@ -211,12 +213,15 @@ void gen_shadow(void) {
 	while (try_move(SHADOW_FALL_INT));
 }
 
-void exit_func(void) {
-	//TODO: Add Game-Over-Screen
-	_exit(0);
+void game_over(void) {
+	    change_message("- Game Over -");
+	    running = FALSE;
+	    menu = TRUE;
+	    glutKeyboardFunc(menu_keyboard);
 }
 
 void change_message(const char * string) {
+	if (!strcmp(message,"- Game Over-")) return;
 	message = realloc(message, sizeof (char) * (1 + strlen(string)));
 	message = strcpy(message,string);
 }

@@ -6,6 +6,7 @@
 #include <stdio.h>
 /*#include <SDL/SDL.h>*/
 #include <FTGL/ftgl.h>
+#include <unistd.h>
 
 float BLOCK_WIDTH = (2*GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH)/10;
 float BLOCK_BORDER_WIDTH = 3*(GAME_WINDOW_WIDTH/(float)WINDOW_WIDTH) / WINDOW_WIDTH;
@@ -155,7 +156,7 @@ void drawInterface(){
 		glVertex2f(x1,y2);
 	glEnd();
 	for (int num = 0; num < 3; num++) {
-		z = queue[block_num % 7 + num];
+		z = queue[(block_num % 7) + num];
 		block_to_rgb(Block[z].rgb,&r,&g,&b);
 		glColor3ub(r,g,b);
 		if (z == 0) off = 0.25 * BLOCK_HEIGHT;
@@ -215,7 +216,12 @@ void updateWindow(){
 		glColor3ub(255,255,255);
 		glRasterPos2f(-1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "[c]ontinue") / WINDOW_WIDTH)),
 			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.55) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
-		ftglRenderFont(font, "[c]ontinue", FTGL_RENDER_ALL);
+		if (strcmp(message,"- Game Over -")) ftglRenderFont(font, "[c]ontinue", FTGL_RENDER_ALL);
+		else {
+			glColor3ub(150,150,150);
+			ftglRenderFont(font, "[c]ontinue", FTGL_RENDER_ALL);
+			glColor3ub(255,255,255);
+		}
 		glRasterPos2f(-1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "[n]ew game") / WINDOW_WIDTH)),
 			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.45) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
 		ftglRenderFont(font, "[n]ew game", FTGL_RENDER_ALL);
@@ -305,13 +311,15 @@ void menu_keyboard(unsigned char key, int x, int y) {
 		glutKeyboardFunc(game_keyboard);
 		break;
 	case 'q':
-		exit_func();
+		_exit(0);
 		break;
 	case 'c':
-		menu = FALSE;
-		change_message("");
-		glutKeyboardFunc(game_keyboard);
-		running = TRUE;
+		if(strcmp(message,"- Game Over -")) {
+			menu = FALSE;
+			change_message("");
+			glutKeyboardFunc(game_keyboard);
+			running = TRUE;
+		}
 		break;
 	case 27 /*ESC*/:
 		menu = FALSE;

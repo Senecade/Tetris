@@ -13,5 +13,5 @@ void rgb_to_hsv(unsigned char R, unsigned char G, unsigned char B, double *H, do
 void new_game(void);
 void * gravity(void * thing);
 void gen_shadow(void);
-void exit_func(void);
+void game_over(void);
 void change_message(const char * string);

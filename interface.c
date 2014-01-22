@@ -216,12 +216,7 @@ void updateWindow(){
 		glColor3ub(255,255,255);
 		glRasterPos2f(-1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "[c]ontinue") / WINDOW_WIDTH)),
 			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.55) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
-		if (strcmp(message,"- Game Over -")) ftglRenderFont(font, "[c]ontinue", FTGL_RENDER_ALL);
-		else {
-			glColor3ub(150,150,150);
-			ftglRenderFont(font, "[c]ontinue", FTGL_RENDER_ALL);
-			glColor3ub(255,255,255);
-		}
+		if (!gover) ftglRenderFont(font, "[c]ontinue", FTGL_RENDER_ALL);
 		glRasterPos2f(-1 + BLOCK_OFFSET_X + (5.0 * BLOCK_WIDTH - (ftglGetFontAdvance(font, "[n]ew game") / WINDOW_WIDTH)),
 			      -1 + 2 * (WINDOW_HEIGHT - (1 - 0.45) * GAME_WINDOW_HEIGHT - OFFSET_Y) / WINDOW_HEIGHT);
 		ftglRenderFont(font, "[n]ew game", FTGL_RENDER_ALL);
@@ -314,7 +309,7 @@ void menu_keyboard(unsigned char key, int x, int y) {
 		_exit(0);
 		break;
 	case 'c':
-		if(strcmp(message,"- Game Over -")) {
+		if(!gover) {
 			menu = FALSE;
 			change_message("");
 			glutKeyboardFunc(game_keyboard);

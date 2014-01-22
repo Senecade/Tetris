@@ -90,6 +90,10 @@ void newqueue(void) {
 void spawn_block(void) {
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
+	for (int i = 0; i < 14; i++) printf("%d ",queue[i]);
+	puts("");
+	for (int i = 0; i < block_num % 7; i++) printf("  ");
+	puts("X");
 	if (next_block == 3) ActiveBlox.x = 4;
 	else ActiveBlox.x = 3;
 	ActiveBlox.y = 0;
@@ -169,7 +173,7 @@ void func_next_block(void) {
 	}
 	else {
 		chain = 0;
-		change_message("");
+		if (!gover) change_message("");
 	}
 }
 
@@ -184,6 +188,7 @@ void new_game(void) {
        	running = TRUE;
 	key_down = FALSE;
        	menu = FALSE;
+	gover = FALSE;
 	memset(field, 0, sizeof field);
 	ActiveBlox.shadow_offset = 0;
 	for (int i=0;i<7;i++) {
@@ -217,11 +222,11 @@ void game_over(void) {
 	    change_message("- Game Over -");
 	    running = FALSE;
 	    menu = TRUE;
+	    gover = TRUE;
 	    glutKeyboardFunc(menu_keyboard);
 }
 
 void change_message(const char * string) {
-	if (!strcmp(message,"- Game Over-")) return;
 	message = realloc(message, sizeof (char) * (1 + strlen(string)));
 	message = strcpy(message,string);
 }

@@ -104,7 +104,7 @@ int destroy_rows(int type) {
 	switch (rows) {
 		case 4:
 			points += 1000 * (1 + chain++ / 10.0);
-			change_message("- Tetris -");
+			if (!gover) change_message("- Tetris -");
 			break;
 		case 3:
 			points += 600 * (1 + chain++ / 10.0);
@@ -117,12 +117,12 @@ int destroy_rows(int type) {
 			break;
 		default: break;
 	}
-	if(chain > 1) {
+	if(chain > 1 && !gover) {
 		sprintf(strchain,"- chain +%d -",chain - 1);
 		change_message(strchain);
 	}
 	if (lvl_blox >= level * BLOCKS_PER_LEVEL) {
-		change_message("- Level up -");
+		if (!gover) change_message("- Level up -");
 		lvl_blox -= level++ * BLOCKS_PER_LEVEL;
 		next_level();
 	}

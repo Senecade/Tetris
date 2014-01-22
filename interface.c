@@ -156,7 +156,7 @@ void drawInterface(){
 		glVertex2f(x1,y2);
 	glEnd();
 	for (int num = 0; num < 3; num++) {
-		z = queue[(block_num % 7) + num];
+		z = queue[(block_num - 1) % 7 + num + 1];
 		block_to_rgb(Block[z].rgb,&r,&g,&b);
 		glColor3ub(r,g,b);
 		if (z == 0) off = 0.25 * BLOCK_HEIGHT;

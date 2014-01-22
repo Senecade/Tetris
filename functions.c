@@ -90,10 +90,6 @@ void newqueue(void) {
 void spawn_block(void) {
 	if (block_num % 7 == 0) newqueue();
 	next_block = queue[block_num % 7];
-	for (int i = 0; i < 14; i++) printf("%d ",queue[i]);
-	puts("");
-	for (int i = 0; i < block_num % 7; i++) printf("  ");
-	puts("X");
 	if (next_block == 3) ActiveBlox.x = 4;
 	else ActiveBlox.x = 3;
 	ActiveBlox.y = 0;

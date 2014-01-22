@@ -40,7 +40,7 @@ int try_move(int movetype){
 }
 
 void next_level(void) {
-    	double b = 1000, a = 250 /*in ms*/, k = pow(10,-4), e = 2.71828182846;
+    	double b = 1000, a = 250 /*in ms*/, k = 0.5 * pow(10,-3), e = 2.71828182846;
 	delay = a / (1 + (pow(e,(-k * a * (level- 1)))) * ((a / b) - 1));
 	delay *= 1000000;
 	timer.tv_sec = (int) (delay / 1000000000);
